@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "16474611327",
+    "project_id": "moodlog-75131",
+    "storage_bucket": "moodlog-75131.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:16474611327:android:92f2233575efc46c2ee94a",
+        "android_client_info": {
+          "package_name": "com.logmind.moodlog"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCIIGanijkT8KgzpFMeZelJhTqMjrbY7o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
