@@ -1,4 +1,4 @@
-package com.logmind.moodlog.presentation.utils
+package com.logmind.moodlog.utils
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -6,9 +6,6 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
-import androidx.activity.compose.ManagedActivityResultLauncher
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -22,7 +19,8 @@ import java.util.Locale
 object ImagePickerHelper {
 
     fun createImageFile(context: Context): File {
-        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val timeStamp: String =
+            SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val storageDir: File = File(context.getExternalFilesDir(null), "Pictures")
         if (!storageDir.exists()) {
             storageDir.mkdirs()
@@ -75,11 +73,12 @@ object ImagePickerHelper {
             }
 
             // Resize bitmap
-            val resizedBitmap = if (newWidth != rotatedBitmap.width || newHeight != rotatedBitmap.height) {
-                Bitmap.createScaledBitmap(rotatedBitmap, newWidth, newHeight, true)
-            } else {
-                rotatedBitmap
-            }
+            val resizedBitmap =
+                if (newWidth != rotatedBitmap.width || newHeight != rotatedBitmap.height) {
+                    Bitmap.createScaledBitmap(rotatedBitmap, newWidth, newHeight, true)
+                } else {
+                    rotatedBitmap
+                }
 
             // Save to file
             val outputFile = createImageFile(context)
@@ -104,8 +103,11 @@ object ImagePickerHelper {
             val inputStream = context.contentResolver.openInputStream(uri)
             val exif = inputStream?.let { ExifInterface(it) }
             inputStream?.close()
-            
-            when (exif?.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)) {
+
+            when (exif?.getAttributeInt(
+                ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_UNDEFINED
+            )) {
                 ExifInterface.ORIENTATION_ROTATE_90 -> 90
                 ExifInterface.ORIENTATION_ROTATE_180 -> 180
                 ExifInterface.ORIENTATION_ROTATE_270 -> 270

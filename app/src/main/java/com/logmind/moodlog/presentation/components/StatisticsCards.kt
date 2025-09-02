@@ -1,24 +1,22 @@
 package com.logmind.moodlog.presentation.components
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.logmind.moodlog.R
+import com.logmind.moodlog.ui.components.SurfaceCard
 
 data class StatisticCard(
     val title: String,
@@ -34,14 +32,7 @@ fun StatisticsCards(
     totalEntries: Int,
     streakDays: Int,
     bestMoodDay: String?,
-    modifier: Modifier = Modifier
 ) {
-    var animationTrigger by remember { mutableStateOf(false) }
-    
-    LaunchedEffect(totalEntries) {
-        animationTrigger = true
-    }
-    
     val cards = listOf(
         StatisticCard(
             title = "평균 감정",
@@ -72,9 +63,9 @@ fun StatisticsCards(
             color = Color(0xFF4CAF50)
         )
     )
-    
+
     Column(
-        modifier = modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         // First row with first two cards
@@ -82,121 +73,61 @@ fun StatisticsCards(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            AnimatedStatisticCard(
-                card = cards[0],
-                animationDelay = 0,
-                isVisible = animationTrigger,
-                modifier = Modifier.weight(1f)
-            )
-            AnimatedStatisticCard(
-                card = cards[1],
-                animationDelay = 100,
-                isVisible = animationTrigger,
-                modifier = Modifier.weight(1f)
-            )
+            StatisticCardItem(card = cards[0], modifier = Modifier.weight(1f))
+            StatisticCardItem(card = cards[1], modifier = Modifier.weight(1f))
         }
-        
+
         // Second row with remaining two cards
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            AnimatedStatisticCard(
-                card = cards[2],
-                animationDelay = 200,
-                isVisible = animationTrigger,
-                modifier = Modifier.weight(1f)
-            )
-            AnimatedStatisticCard(
-                card = cards[3],
-                animationDelay = 300,
-                isVisible = animationTrigger,
-                modifier = Modifier.weight(1f)
-            )
+            StatisticCardItem(card = cards[2], modifier = Modifier.weight(1f))
+            StatisticCardItem(card = cards[3], modifier = Modifier.weight(1f))
         }
     }
 }
 
 @Composable
-private fun AnimatedStatisticCard(
+private fun StatisticCardItem(
+    modifier: Modifier = Modifier,
     card: StatisticCard,
-    animationDelay: Int,
-    isVisible: Boolean,
-    modifier: Modifier = Modifier
 ) {
-    var startAnimation by remember { mutableStateOf(false) }
-    
-    val scale by animateFloatAsState(
-        targetValue = if (startAnimation) 1f else 0f,
-        animationSpec = tween(
-            durationMillis = 400,
-            delayMillis = animationDelay
-        ),
-        label = "card_scale"
-    )
-    
-    LaunchedEffect(isVisible) {
-        if (isVisible) {
-            startAnimation = true
-        }
-    }
-    
-    Card(
+    SurfaceCard(
         modifier = modifier
-            .fillMaxWidth()
-            .scale(scale),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            card.color.copy(alpha = 0.1f),
-                            card.color.copy(alpha = 0.05f)
-                        )
-                    )
-                )
-                .padding(16.dp)
+        Column(
+            modifier = Modifier.padding(dimensionResource(R.dimen.card_padding)),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = card.title,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    
-                    Text(
-                        text = card.emoji,
-                        fontSize = 20.sp
-                    )
-                }
-                
                 Text(
-                    text = card.value,
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = card.color
+                    text = card.title,
+                    style = MaterialTheme.typography.bodyMedium,
                 )
-                
-                card.subtitle?.let { subtitle ->
-                    Text(
-                        text = subtitle,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
+
+                Text(
+                    text = card.emoji,
+                    fontSize = 20.sp
+                )
+            }
+
+            Text(
+                text = card.value,
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold,
+            )
+
+            card.subtitle?.let { subtitle ->
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         }
     }

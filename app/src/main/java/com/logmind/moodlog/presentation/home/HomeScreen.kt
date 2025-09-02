@@ -1,8 +1,6 @@
 package com.logmind.moodlog.presentation.home
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -18,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -42,8 +39,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
@@ -53,10 +48,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.logmind.moodlog.R
 import com.logmind.moodlog.domain.entities.Journal
+import com.logmind.moodlog.ui.components.SurfaceCard
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.time.YearMonth
-import kotlin.math.ceil
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,7 +60,7 @@ fun HomeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val selectedDate by viewModel.selectedDate.collectAsState()
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -159,24 +154,11 @@ fun HomeScreen(
 
 @Composable
 fun ModernDateHeader(selectedDate: LocalDateTime) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
-        ),
-        shape = RoundedCornerShape(16.dp)
-    ) {
+    SurfaceCard {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(
-                    Brush.horizontalGradient(
-                        colors = listOf(
-                            MaterialTheme.colorScheme.primaryContainer,
-                            MaterialTheme.colorScheme.secondaryContainer
-                        )
-                    )
-                )
+
                 .padding(20.dp)
         ) {
             Column(
@@ -209,16 +191,16 @@ fun ModernMonthlyCalendar(
     val firstDayOfMonth = yearMonth.atDay(1)
     val lastDayOfMonth = yearMonth.atEndOfMonth()
     val daysInMonth = yearMonth.lengthOfMonth()
-    
+
     // Create calendar grid data
     val calendarDays = mutableListOf<CalendarDay>()
-    
+
     // Add empty cells for days before the first day of month
     val firstDayOfWeek = firstDayOfMonth.dayOfWeek.value % 7
     repeat(firstDayOfWeek) {
         calendarDays.add(CalendarDay.Empty)
     }
-    
+
     // Add actual days
     (1..daysInMonth).forEach { day ->
         val date = selectedDate.withDayOfMonth(day)
@@ -226,7 +208,7 @@ fun ModernMonthlyCalendar(
         val hasJournals = monthlyJournals.containsKey(normalizedDate)
         val isSelected = selectedDate.dayOfMonth == day
         val isToday = date.toLocalDate() == LocalDateTime.now().toLocalDate()
-        
+
         calendarDays.add(
             CalendarDay.Day(
                 date = date,
@@ -237,17 +219,10 @@ fun ModernMonthlyCalendar(
             )
         )
     }
-    
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = RoundedCornerShape(16.dp)
-    ) {
+
+    SurfaceCard {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(dimensionResource(R.dimen.card_padding))
         ) {
             // Week headers
             Row(
@@ -264,9 +239,9 @@ fun ModernMonthlyCalendar(
                     )
                 }
             }
-            
-            Spacer(modifier = Modifier.height(8.dp))
-            
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             // Calendar grid
             LazyVerticalGrid(
                 columns = GridCells.Fixed(7),
@@ -279,6 +254,7 @@ fun ModernMonthlyCalendar(
                         is CalendarDay.Empty -> {
                             Spacer(modifier = Modifier.aspectRatio(1f))
                         }
+
                         is CalendarDay.Day -> {
                             ModernCalendarDayItem(
                                 calendarDay = calendarDay,
@@ -308,12 +284,7 @@ fun ModernCalendarDayItem(
     calendarDay: CalendarDay.Day,
     onClick: () -> Unit
 ) {
-    val scale by animateFloatAsState(
-        targetValue = if (calendarDay.isSelected) 1.1f else 1f,
-        animationSpec = spring(dampingRatio = 0.6f),
-        label = "scale_animation"
-    )
-    
+
     val backgroundColor by animateColorAsState(
         targetValue = when {
             calendarDay.isSelected -> MaterialTheme.colorScheme.primary
@@ -323,7 +294,7 @@ fun ModernCalendarDayItem(
         animationSpec = tween(300),
         label = "background_color"
     )
-    
+
     val borderColor = when {
         calendarDay.isToday && !calendarDay.isSelected -> MaterialTheme.colorScheme.primary
         else -> Color.Transparent
@@ -332,7 +303,6 @@ fun ModernCalendarDayItem(
     Box(
         modifier = Modifier
             .aspectRatio(1f)
-            .scale(scale)
             .clip(RoundedCornerShape(12.dp))
             .background(backgroundColor)
             .border(
@@ -360,7 +330,7 @@ fun ModernCalendarDayItem(
                     else -> FontWeight.Normal
                 }
             )
-            
+
             if (calendarDay.hasJournals) {
                 Box(
                     modifier = Modifier
@@ -384,11 +354,7 @@ fun JournalCard(
     journal: Journal,
     onDelete: () -> Unit
 ) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
+    SurfaceCard {
         Column(
             modifier = Modifier.padding(16.dp)
         ) {

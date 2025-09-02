@@ -4,7 +4,15 @@
 
 Flutter MoodLog 앱의 모든 기능을 Android Jetpack Compose로 완전히 재구현하여, 네이티브 Android 환경에서 최적화된 성능과 사용자 경험을
 제공합니다.
-각 날짜에 맞는 기능을 구현 후 태스크의 [ ] 빈 괄호에 x 표시를 체크하여 완료된 사항임을 표시합니다.
+
+## 기능 구현간 참고 사항
+
+- 각 날짜에 맞는 기능을 구현 후 태스크의 [ ] 빈 괄호에 x 표시를 체크하여 완료된 사항임을 표시한다.
+- ui/components 폴더는 2개 이상의 페이지에서 재사용되는 컴포넌트들만 있어야 한다.
+- presentation은 페이지 도메인만 존재해야 하고 각 폴더 내부는 Screen파일, ViewModel파일, 그리고 해당 페이지에서만 재사용되는 컴포넌트는 해당 폴더 내부에
+  components 폴더를 만들어 거기서 관리한다.
+    - ex) presentation/home/HomeScreen.kt, presentation/home/HomeViewModel.kt,
+      presentation/home/components/MoodSlider.kt
 
 ## 📊 현재 진행 상황
 

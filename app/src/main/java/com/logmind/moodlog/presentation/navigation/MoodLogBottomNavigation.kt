@@ -29,7 +29,7 @@ fun MoodLogBottomNavigation(
     NavigationBar(modifier = modifier) {
         bottomNavigationItems.forEach { item ->
             val selected = currentRoute == item.route
-            
+
             val iconScale by animateFloatAsState(
                 targetValue = if (selected) 1.2f else 1f,
                 animationSpec = tween(
@@ -38,7 +38,7 @@ fun MoodLogBottomNavigation(
                 ),
                 label = "icon_scale"
             )
-            
+
             val iconTint by animateColorAsState(
                 targetValue = if (selected) Color.Unspecified else Color.Unspecified,
                 animationSpec = tween(
@@ -53,6 +53,7 @@ fun MoodLogBottomNavigation(
                     Icon(
                         imageVector = if (selected) item.selectedIcon else item.unselectedIcon,
                         contentDescription = item.label,
+                        tint = iconTint,
                         modifier = Modifier
                             .scale(iconScale)
                             .size(24.dp)

@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,19 +31,20 @@ fun MoodLogNavigation(
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    
+
     val showBottomBar = when (currentRoute) {
         Screen.Write.route -> false
         else -> true
     }
-    
+
     val showFab = when (currentRoute) {
         Screen.Home.route -> true
         Screen.Write.route -> false
         else -> true
     }
-    
+
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.surfaceContainer,
         bottomBar = {
             AnimatedVisibility(
                 visible = showBottomBar,

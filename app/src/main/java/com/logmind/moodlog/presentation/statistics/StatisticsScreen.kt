@@ -98,39 +98,33 @@ fun StatisticsScreen(
             }
         }
 
-        AnimatedVisibility(
-            visible = !uiState.isLoading && uiState.errorMessage == null,
-            enter = fadeIn(),
-            exit = fadeOut()
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.fillMaxWidth()
         ) {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                // Statistics Cards
-                item {
-                    StatisticsCards(
-                        averageMood = uiState.averageMood,
-                        totalEntries = uiState.totalEntries,
-                        streakDays = uiState.streakDays,
-                        bestMoodDay = uiState.bestMoodDay
-                    )
-                }
+            // Statistics Cards
+            item {
+                StatisticsCards(
+                    averageMood = uiState.averageMood,
+                    totalEntries = uiState.totalEntries,
+                    streakDays = uiState.streakDays,
+                    bestMoodDay = uiState.bestMoodDay
+                )
+            }
 
-                // Mood Trend Chart
-                item {
-                    MoodTrendChart(data = uiState.moodTrends)
-                }
+            // Mood Trend Chart
+            item {
+                MoodTrendChart(data = uiState.moodTrends)
+            }
 
-                // Mood Distribution Chart
-                item {
-                    MoodDistributionChart(data = uiState.moodDistribution)
-                }
+            // Mood Distribution Chart
+            item {
+                MoodDistributionChart(data = uiState.moodDistribution)
+            }
 
-                // Add some bottom padding
-                item {
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
+            // Add some bottom padding
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
 
