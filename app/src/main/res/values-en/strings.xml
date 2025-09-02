@@ -1,0 +1,141 @@
+<resources>
+    <string name="app_name">MoodLog</string>
+    
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_write">Write</string>
+    <string name="nav_statistics">Statistics</string>
+    <string name="nav_settings">Settings</string>
+    
+    <!-- Home Screen -->
+    <string name="home_title">Today\'s Mood</string>
+    <string name="home_no_entries">No entries yet</string>
+    <string name="home_start_journaling">Start journaling</string>
+    <string name="home_today">Today</string>
+    <string name="home_entries_count">%1$d entries</string>
+    
+    <!-- Write Screen -->
+    <string name="write_title">Write Entry</string>
+    <string name="write_mood_question">How are you feeling today?</string>
+    <string name="write_content_hint">Record what happened today...</string>
+    <string name="write_add_image">Add Image</string>
+    <string name="write_add_tag">Add Tag</string>
+    <string name="write_save">Save</string>
+    <string name="write_cancel">Cancel</string>
+    <string name="write_gallery">Gallery</string>
+    <string name="write_camera">Camera</string>
+    <string name="write_image_options">Image Options</string>
+    
+    <!-- Mood Types -->
+    <string name="mood_very_happy">Very Happy</string>
+    <string name="mood_happy">Happy</string>
+    <string name="mood_neutral">Neutral</string>
+    <string name="mood_sad">Sad</string>
+    <string name="mood_very_sad">Very Sad</string>
+    
+    <!-- Tag System -->
+    <string name="tag_create_title">Create New Tag</string>
+    <string name="tag_name">Tag Name</string>
+    <string name="tag_create">Create</string>
+    <string name="tag_search_hint">Search or create tag</string>
+    <string name="tag_selected_count">%1$d selected</string>
+    
+    <!-- Statistics Screen -->
+    <string name="statistics_title">Statistics</string>
+    <string name="statistics_refresh">Refresh</string>
+    <string name="statistics_average_mood">Average Mood</string>
+    <string name="statistics_total_entries">Total Entries</string>
+    <string name="statistics_streak_days">Streak Days</string>
+    <string name="statistics_best_mood_day">Best Day</string>
+    <string name="statistics_mood_trend">Mood Trend</string>
+    <string name="statistics_mood_distribution">Mood Distribution</string>
+    <string name="statistics_no_data">No data to display</string>
+    <string name="statistics_error">Unable to load data</string>
+    <string name="statistics_retry">Retry</string>
+    <string name="statistics_entries_suffix">entries</string>
+    <string name="statistics_days_suffix">days</string>
+    <string name="statistics_streak_active">Keep it up!</string>
+    <string name="statistics_streak_start">Start a new streak</string>
+    <string name="statistics_best_day">Best day</string>
+    <string name="statistics_record_now">Start recording</string>
+    <string name="statistics_total_records">Total Records</string>
+    <string name="statistics_count_suffix">times</string>
+    
+    <!-- Time Periods -->
+    <string name="period_week">Last 7 days</string>
+    <string name="period_month">Last 30 days</string>
+    <string name="period_three_months">Last 3 months</string>
+    <string name="period_year">Last 1 year</string>
+    
+    <!-- Settings Screen -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_color_theme">Color Theme</string>
+    <string name="settings_font">Font</string>
+    
+    <!-- Theme Options -->
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_system">System Default</string>
+    
+    <!-- Language Options -->
+    <string name="language_korean">한국어</string>
+    <string name="language_english">English</string>
+    <string name="language_japanese">日本語</string>
+    <string name="language_chinese_simplified">简体中文</string>
+    <string name="language_chinese_traditional">繁體中文</string>
+    <string name="language_spanish">Español</string>
+    <string name="language_french">Français</string>
+    <string name="language_german">Deutsch</string>
+    <string name="language_portuguese">Português</string>
+    
+    <!-- Font Options -->
+    <string name="font_pretendard">Pretendard</string>
+    <string name="font_noto_sans">Noto Sans</string>
+    <string name="font_roboto">Roboto</string>
+    <string name="font_inter">Inter</string>
+    <string name="font_system">System Default</string>
+    
+    <!-- Common -->
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="close">Close</string>
+    <string name="loading">Loading...</string>
+    <string name="error">Error</string>
+    <string name="retry">Retry</string>
+    <string name="success">Success</string>
+    <string name="none">None</string>
+    
+    <!-- Calendar -->
+    <string name="calendar_today">Today</string>
+    <string name="calendar_month_format">%1$d %2$d</string>
+    
+    <!-- Days of Week -->
+    <string name="day_sunday">Sun</string>
+    <string name="day_monday">Mon</string>
+    <string name="day_tuesday">Tue</string>
+    <string name="day_wednesday">Wed</string>
+    <string name="day_thursday">Thu</string>
+    <string name="day_friday">Fri</string>
+    <string name="day_saturday">Sat</string>
+    
+    <!-- Weather -->
+    <string name="weather_clear">Clear</string>
+    <string name="weather_cloudy">Cloudy</string>
+    <string name="weather_rainy">Rainy</string>
+    <string name="weather_snowy">Snowy</string>
+    <string name="weather_thunderstorm">Thunderstorm</string>
+    <string name="weather_fog">Fog</string>
+    
+    <!-- Permissions -->
+    <string name="permission_camera_title">Camera Permission Required</string>
+    <string name="permission_camera_message">Camera permission is required to take photos.</string>
+    <string name="permission_storage_title">Storage Permission Required</string>
+    <string name="permission_storage_message">Storage permission is required to select images.</string>
+    <string name="permission_grant">Grant Permission</string>
+    <string name="permission_deny">Deny</string>
+</resources>

@@ -25,8 +25,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -41,6 +39,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -78,7 +81,7 @@ fun HomeScreen(
         // Modern Date Header
         ModernDateHeader(selectedDate = selectedDate)
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.spacing_l)))
 
         // Modern Monthly Calendar
         ModernMonthlyCalendar(
@@ -87,7 +90,7 @@ fun HomeScreen(
             onDateSelected = viewModel::selectDate
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.spacing_l)))
 
         // Today's Journals
         Row(
@@ -128,14 +131,7 @@ fun HomeScreen(
 
                 if (uiState.selectedDateJournals.isEmpty()) {
                     item {
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 32.dp),
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-                            )
-                        ) {
+                        SurfaceCard {
                             Text(
                                 text = "아직 기록이 없어요\n첫 번째 무드를 기록해보세요!",
                                 style = MaterialTheme.typography.bodyMedium,
@@ -154,7 +150,10 @@ fun HomeScreen(
 
 @Composable
 fun ModernDateHeader(selectedDate: LocalDateTime) {
-    SurfaceCard {
+    SurfaceCard(
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
+        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -229,7 +228,15 @@ fun ModernMonthlyCalendar(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                listOf("일", "월", "화", "수", "목", "금", "토").forEach { dayName ->
+                listOf(
+                    stringResource(R.string.day_sunday),
+                    stringResource(R.string.day_monday),
+                    stringResource(R.string.day_tuesday),
+                    stringResource(R.string.day_wednesday),
+                    stringResource(R.string.day_thursday),
+                    stringResource(R.string.day_friday),
+                    stringResource(R.string.day_saturday)
+                ).forEach { dayName ->
                     Text(
                         text = dayName,
                         style = MaterialTheme.typography.labelMedium,
@@ -240,7 +247,7 @@ fun ModernMonthlyCalendar(
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.spacing_l)))
 
             // Calendar grid
             LazyVerticalGrid(
@@ -310,7 +317,17 @@ fun ModernCalendarDayItem(
                 color = borderColor,
                 shape = RoundedCornerShape(12.dp)
             )
-            .clickable { onClick() },
+            .clickable { onClick() }
+            .semantics {
+                contentDescription = if (calendarDay.isSelected) {
+                    "선택된 날짜: ${calendarDay.day}일"
+                } else if (calendarDay.isToday) {
+                    "오늘: ${calendarDay.day}일"
+                } else {
+                    "${calendarDay.day}일"
+                }
+                role = Role.Button
+            },
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -356,7 +373,7 @@ fun JournalCard(
 ) {
     SurfaceCard {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(dimensionResource(R.dimen.screen_padding))
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),

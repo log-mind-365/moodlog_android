@@ -12,6 +12,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -34,6 +37,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.dimensionResource
 import com.logmind.moodlog.R
 import com.logmind.moodlog.presentation.components.StatisticsCards
 import com.logmind.moodlog.presentation.components.charts.MoodDistributionChart
@@ -59,11 +64,11 @@ fun StatisticsScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "통계",
+                text = stringResource(R.string.statistics_title),
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontWeight = FontWeight.Bold
                 ),
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier.padding(bottom = dimensionResource(R.dimen.spacing_s))
             )
 
             IconButton(
@@ -72,7 +77,7 @@ fun StatisticsScreen(
             ) {
                 Icon(
                     imageVector = Icons.Default.Refresh,
-                    contentDescription = "새로고침"
+                    contentDescription = stringResource(R.string.content_desc_refresh)
                 )
             }
         }
@@ -99,7 +104,7 @@ fun StatisticsScreen(
         }
 
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_l)),
             modifier = Modifier.fillMaxWidth()
         ) {
             // Statistics Cards

@@ -15,6 +15,9 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import com.logmind.moodlog.R
 import com.logmind.moodlog.ui.components.SurfaceCard
 
@@ -57,9 +60,9 @@ fun StatisticsCards(
         ),
         StatisticCard(
             title = "최고의 날",
-            value = bestMoodDay ?: "없음",
+            value = bestMoodDay ?: stringResource(R.string.none),
             emoji = "⭐",
-            subtitle = if (bestMoodDay != null) "가장 좋았던 날" else "기록해보세요",
+            subtitle = if (bestMoodDay != null) stringResource(R.string.statistics_best_day) else stringResource(R.string.statistics_record_now),
             color = Color(0xFF4CAF50)
         )
     )
@@ -94,7 +97,9 @@ private fun StatisticCardItem(
     card: StatisticCard,
 ) {
     SurfaceCard(
-        modifier = modifier
+        modifier = modifier.semantics {
+            contentDescription = "${card.title}: ${card.value}. ${card.subtitle ?: ""}"
+        }
     ) {
         Column(
             modifier = Modifier.padding(dimensionResource(R.dimen.card_padding)),

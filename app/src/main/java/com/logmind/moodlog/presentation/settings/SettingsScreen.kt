@@ -1,25 +1,17 @@
 package com.logmind.moodlog.presentation.settings
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenuItem
@@ -30,7 +22,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -40,12 +31,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.logmind.moodlog.R
 import com.logmind.moodlog.domain.entities.ColorTheme
 import com.logmind.moodlog.domain.entities.FontFamily
 import com.logmind.moodlog.domain.entities.LanguageCode
@@ -62,8 +55,8 @@ fun SettingsScreen(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .padding(dimensionResource(R.dimen.screen_padding)),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_l))
     ) {
         item {
             ThemeSection(
@@ -76,13 +69,6 @@ fun SettingsScreen(
             LanguageSection(
                 currentLanguage = uiState.languageCode,
                 onLanguageChange = viewModel::updateLanguage
-            )
-        }
-
-        item {
-            ColorThemeSection(
-                currentColorTheme = uiState.colorTheme,
-                onColorThemeChange = viewModel::updateColorTheme
             )
         }
 
@@ -182,73 +168,6 @@ private fun LanguageSection(
     }
 }
 
-@Composable
-private fun ColorThemeSection(
-    currentColorTheme: ColorTheme,
-    onColorThemeChange: (ColorTheme) -> Unit
-) {
-    SettingsCard(
-        title = "컬러 테마",
-        icon = Icons.Default.Settings
-    ) {
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(4),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.height(200.dp)
-        ) {
-            items(ColorTheme.entries) { colorTheme ->
-                ColorThemeItem(
-                    colorTheme = colorTheme,
-                    isSelected = currentColorTheme == colorTheme,
-                    onSelect = { onColorThemeChange(colorTheme) }
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun ColorThemeItem(
-    colorTheme: ColorTheme,
-    isSelected: Boolean,
-    onSelect: () -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .size(60.dp)
-            .clip(CircleShape)
-            .selectable(
-                selected = isSelected,
-                onClick = onSelect
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .clip(CircleShape),
-            contentAlignment = Alignment.Center
-        ) {
-            // TODO: 실제 색상으로 대체
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                shape = CircleShape,
-                color = getColorThemePreviewColor(colorTheme)
-            ) {}
-
-            if (isSelected) {
-                Icon(
-                    Icons.Default.Check,
-                    contentDescription = "선택됨",
-                    tint = Color.White,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-        }
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FontSection(
@@ -315,7 +234,7 @@ private fun SettingsCard(
             ) {
                 Icon(
                     imageVector = icon,
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.content_desc_color_theme),
                     tint = MaterialTheme.colorScheme.primary
                 )
                 Text(

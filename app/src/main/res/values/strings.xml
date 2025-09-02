@@ -17,7 +17,8 @@
     <!-- Write Screen -->
     <string name="write_title">일기 작성</string>
     <string name="write_mood_question">오늘 기분이 어떤가요?</string>
-    <string name="write_content_hint">오늘 있었던 일을 기록해보세요...</string>
+    <string name="write_content_question">오늘 하루는 어땠나요?</string>
+    <string name="write_content_hint">자유롭게 작성해보세요...</string>
     <string name="write_add_image">이미지 추가</string>
     <string name="write_add_tag">태그 추가</string>
     <string name="write_save">저장</string>
@@ -112,7 +113,38 @@
     
     <!-- Calendar -->
     <string name="calendar_today">오늘</string>
-    <string name="calendar_month_format">%1$d년 %2$d월</string>
+    <string name="calendar_month_format">%1$d %2$d</string>
+    
+    <!-- Days of Week -->
+    <string name="day_sunday">일</string>
+    <string name="day_monday">월</string>
+    <string name="day_tuesday">화</string>
+    <string name="day_wednesday">수</string>
+    <string name="day_thursday">목</string>
+    <string name="day_friday">금</string>
+    <string name="day_saturday">토</string>
+    
+    <!-- Weather -->
+    <string name="weather_clear">맑음</string>
+    <string name="weather_cloudy">흐림</string>
+    <string name="weather_rainy">비</string>
+    <string name="weather_snowy">눈</string>
+    <string name="weather_thunderstorm">뇌우</string>
+    <string name="weather_fog">안개</string>
+    
+    <!-- Font Names (Korean) -->
+    <string name="font_pretendard_kr">프리텐다드</string>
+    <string name="font_lee_seoyun">이서윤체</string>
+    <string name="font_orbit_moon">달의궤도체</string>
+    <string name="font_restart">리스타트체</string>
+    <string name="font_overcome">오버컴체</string>
+    
+    <!-- Image Picker -->
+    <string name="image_picker_photo">사진</string>
+    <string name="image_picker_add">추가</string>
+    
+    <!-- Tag System -->
+    <string name="tag_label">태그</string>
     
     <!-- Permissions -->
     <string name="permission_camera_title">카메라 권한 필요</string>
@@ -121,4 +153,22 @@
     <string name="permission_storage_message">이미지를 선택하려면 저장소 권한이 필요합니다.</string>
     <string name="permission_grant">권한 허용</string>
     <string name="permission_deny">거부</string>
+    
+    <!-- Content Descriptions -->
+    <string name="content_desc_close">닫기</string>
+    <string name="content_desc_refresh">새로고침</string>
+    <string name="content_desc_selected">선택됨</string>
+    <string name="content_desc_add_tag">태그 추가</string>
+    <string name="content_desc_remove_tag">태그 제거</string>
+    <string name="content_desc_color_theme">컬러 테마</string>
+    <string name="content_desc_mood_emoji">감정 상태: %1$s</string>
+    <string name="content_desc_calendar_day">%1$d일</string>
+    <string name="content_desc_chart">%1$s 차트</string>
+    <string name="content_desc_slider">감정 슬라이더</string>
+    <string name="content_desc_image">첨부된 이미지</string>
+    
+    <!-- Accessibility Labels -->
+    <string name="accessibility_mood_slider">감정을 선택하세요. 현재 %1$s</string>
+    <string name="accessibility_date_selected">선택된 날짜: %1$s</string>
+    <string name="accessibility_statistics_card">%1$s: %2$s</string>
 </resources>

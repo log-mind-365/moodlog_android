@@ -1,0 +1,141 @@
+<resources>
+    <string name="app_name">MoodLog</string>
+    
+    <!-- Navigation -->
+    <string name="nav_home">ホーム</string>
+    <string name="nav_write">記録</string>
+    <string name="nav_statistics">統計</string>
+    <string name="nav_settings">設定</string>
+    
+    <!-- Home Screen -->
+    <string name="home_title">今日の気分</string>
+    <string name="home_no_entries">まだ記録がありません</string>
+    <string name="home_start_journaling">日記を書いてみましょう</string>
+    <string name="home_today">今日</string>
+    <string name="home_entries_count">%1$d件の記録</string>
+    
+    <!-- Write Screen -->
+    <string name="write_title">日記作成</string>
+    <string name="write_mood_question">今日の気分はいかがですか？</string>
+    <string name="write_content_hint">今日あったことを記録しましょう...</string>
+    <string name="write_add_image">画像追加</string>
+    <string name="write_add_tag">タグ追加</string>
+    <string name="write_save">保存</string>
+    <string name="write_cancel">キャンセル</string>
+    <string name="write_gallery">ギャラリー</string>
+    <string name="write_camera">カメラ</string>
+    <string name="write_image_options">画像オプション</string>
+    
+    <!-- Mood Types -->
+    <string name="mood_very_happy">とても良い</string>
+    <string name="mood_happy">良い</string>
+    <string name="mood_neutral">普通</string>
+    <string name="mood_sad">悪い</string>
+    <string name="mood_very_sad">とても悪い</string>
+    
+    <!-- Tag System -->
+    <string name="tag_create_title">新しいタグ作成</string>
+    <string name="tag_name">タグ名</string>
+    <string name="tag_create">作成</string>
+    <string name="tag_search_hint">タグ検索または作成</string>
+    <string name="tag_selected_count">%1$d個選択</string>
+    
+    <!-- Statistics Screen -->
+    <string name="statistics_title">統計</string>
+    <string name="statistics_refresh">更新</string>
+    <string name="statistics_average_mood">平均気分</string>
+    <string name="statistics_total_entries">総記録数</string>
+    <string name="statistics_streak_days">連続記録</string>
+    <string name="statistics_best_mood_day">最高の日</string>
+    <string name="statistics_mood_trend">気分の推移</string>
+    <string name="statistics_mood_distribution">気分分布</string>
+    <string name="statistics_no_data">表示するデータがありません</string>
+    <string name="statistics_error">データを読み込めません</string>
+    <string name="statistics_retry">再試行</string>
+    <string name="statistics_entries_suffix">件</string>
+    <string name="statistics_days_suffix">日</string>
+    <string name="statistics_streak_active">頑張って続けましょう！</string>
+    <string name="statistics_streak_start">新しく始めましょう</string>
+    <string name="statistics_best_day">最高の日</string>
+    <string name="statistics_record_now">記録してみましょう</string>
+    <string name="statistics_total_records">総記録数</string>
+    <string name="statistics_count_suffix">回</string>
+    
+    <!-- Time Periods -->
+    <string name="period_week">過去7日間</string>
+    <string name="period_month">過去30日間</string>
+    <string name="period_three_months">過去3ヶ月</string>
+    <string name="period_year">過去1年</string>
+    
+    <!-- Settings Screen -->
+    <string name="settings_title">設定</string>
+    <string name="settings_theme">テーマ</string>
+    <string name="settings_language">言語</string>
+    <string name="settings_color_theme">カラーテーマ</string>
+    <string name="settings_font">フォント</string>
+    
+    <!-- Theme Options -->
+    <string name="theme_light">ライト</string>
+    <string name="theme_dark">ダーク</string>
+    <string name="theme_system">システム既定</string>
+    
+    <!-- Language Options -->
+    <string name="language_korean">한국어</string>
+    <string name="language_english">English</string>
+    <string name="language_japanese">日本語</string>
+    <string name="language_chinese_simplified">简体中文</string>
+    <string name="language_chinese_traditional">繁體中文</string>
+    <string name="language_spanish">Español</string>
+    <string name="language_french">Français</string>
+    <string name="language_german">Deutsch</string>
+    <string name="language_portuguese">Português</string>
+    
+    <!-- Font Options -->
+    <string name="font_pretendard">Pretendard</string>
+    <string name="font_noto_sans">Noto Sans</string>
+    <string name="font_roboto">Roboto</string>
+    <string name="font_inter">Inter</string>
+    <string name="font_system">システム既定</string>
+    
+    <!-- Common -->
+    <string name="ok">OK</string>
+    <string name="cancel">キャンセル</string>
+    <string name="save">保存</string>
+    <string name="delete">削除</string>
+    <string name="edit">編集</string>
+    <string name="close">閉じる</string>
+    <string name="loading">読み込み中...</string>
+    <string name="error">エラー</string>
+    <string name="retry">再試行</string>
+    <string name="success">成功</string>
+    <string name="none">なし</string>
+    
+    <!-- Calendar -->
+    <string name="calendar_today">今日</string>
+    <string name="calendar_month_format">%1$d年%2$d月</string>
+    
+    <!-- Days of Week -->
+    <string name="day_sunday">日</string>
+    <string name="day_monday">月</string>
+    <string name="day_tuesday">火</string>
+    <string name="day_wednesday">水</string>
+    <string name="day_thursday">木</string>
+    <string name="day_friday">金</string>
+    <string name="day_saturday">土</string>
+    
+    <!-- Weather -->
+    <string name="weather_clear">晴れ</string>
+    <string name="weather_cloudy">曇り</string>
+    <string name="weather_rainy">雨</string>
+    <string name="weather_snowy">雪</string>
+    <string name="weather_thunderstorm">雷雨</string>
+    <string name="weather_fog">霧</string>
+    
+    <!-- Permissions -->
+    <string name="permission_camera_title">カメラ権限が必要</string>
+    <string name="permission_camera_message">写真撮影にはカメラ権限が必要です。</string>
+    <string name="permission_storage_title">ストレージ権限が必要</string>
+    <string name="permission_storage_message">画像選択にはストレージ権限が必要です。</string>
+    <string name="permission_grant">権限を許可</string>
+    <string name="permission_deny">拒否</string>
+</resources>

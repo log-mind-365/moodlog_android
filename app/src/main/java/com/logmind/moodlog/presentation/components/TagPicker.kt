@@ -19,6 +19,8 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import com.logmind.moodlog.R
 import com.logmind.moodlog.domain.entities.Tag
 
 @Composable
@@ -41,7 +43,7 @@ fun TagPicker(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "태그",
+                text = stringResource(R.string.tag_label),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
@@ -53,11 +55,11 @@ fun TagPicker(
             ) {
                 Icon(
                     Icons.Default.Add,
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.content_desc_add_tag),
                     modifier = Modifier.size(16.dp)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
-                Text("추가", style = MaterialTheme.typography.labelMedium)
+                Text(stringResource(R.string.image_picker_add), style = MaterialTheme.typography.labelMedium)
             }
         }
 
@@ -157,7 +159,7 @@ private fun ModernTagChip(
             if (isSelected) {
                 Icon(
                     Icons.Default.Check,
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.content_desc_add_tag),
                     tint = contentColor,
                     modifier = Modifier.size(16.dp)
                 )
@@ -225,12 +227,12 @@ private fun CreateTagDialog(
                     }
                 }
             ) {
-                Text("생성")
+                Text(stringResource(R.string.tag_create))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("취소")
+                Text(stringResource(R.string.cancel))
             }
         }
     )

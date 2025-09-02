@@ -19,6 +19,7 @@ coil = "3.3.0"
 room = "2.7.2"
 firebase = "34.2.0"
 googleServices = "4.4.3"
+uiTextGoogleFonts = "1.9.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -67,6 +68,7 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 
 # Firebase
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase" }
+androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

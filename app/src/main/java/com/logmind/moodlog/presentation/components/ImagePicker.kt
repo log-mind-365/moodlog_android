@@ -42,6 +42,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import androidx.compose.ui.res.stringResource
+import com.logmind.moodlog.R
 import com.logmind.moodlog.utils.ImagePickerHelper
 import kotlinx.coroutines.launch
 import java.io.File
@@ -200,7 +202,7 @@ private fun AddImageButton(
                     tint = MaterialTheme.colorScheme.onSecondaryContainer
                 )
                 Text(
-                    text = "사진",
+                    text = stringResource(R.string.image_picker_photo),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSecondaryContainer
                 )
@@ -255,7 +257,7 @@ private fun ImageOptionsDialog(
         },
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text("취소")
+                Text(stringResource(R.string.cancel))
             }
         }
     )

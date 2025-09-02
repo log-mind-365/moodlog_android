@@ -34,6 +34,8 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
+import com.logmind.moodlog.R
 import com.logmind.moodlog.presentation.statistics.MoodDistribution
 import com.logmind.moodlog.ui.components.SurfaceCard
 
@@ -157,12 +159,12 @@ private fun MoodLegendItem(
 
         Text(
             text = when (distribution.moodType.sliderValue.toInt()) {
-                4 -> "매우 좋음"
-                3 -> "좋음"
-                2 -> "보통"
-                1 -> "나쁨"
-                0 -> "매우 나쁨"
-                else -> "보통"
+                4 -> stringResource(R.string.mood_very_happy)
+                3 -> stringResource(R.string.mood_happy)
+                2 -> stringResource(R.string.mood_neutral)
+                1 -> stringResource(R.string.mood_sad)
+                0 -> stringResource(R.string.mood_very_sad)
+                else -> stringResource(R.string.mood_neutral)
             },
             style = MaterialTheme.typography.bodySmall,
             modifier = Modifier.weight(1f)

@@ -99,11 +99,7 @@ fun MoodLogNavigation(
                 }
 
                 composable(Screen.Settings.route) {
-                    SettingsScreen(
-                        onNavigateBack = {
-                            navController.popBackStack()
-                        }
-                    )
+                    SettingsScreen()
                 }
             }
         }
