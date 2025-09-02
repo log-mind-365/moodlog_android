@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools" >
 
     <application
-        android:name=".MoodLogApplication"
+        android:name="com.logmind.moodlog.MoodLogApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -11,9 +11,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Moodlog" >
+        android:theme="@style/Theme.Moodlog">
         <activity
-            android:name=".MainActivity"
+            android:name="com.logmind.moodlog.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Moodlog" >

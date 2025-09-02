@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.logmind.moodlog.presentation.home.HomeScreen
+import com.logmind.moodlog.presentation.write.WriteScreen
 
 @Composable
 fun MoodLogNavigation(
@@ -24,10 +25,15 @@ fun MoodLogNavigation(
         }
 
         composable(Screen.Write.route) {
-            // WriteScreen will be implemented
-            WriteScreenPlaceholder(
+            WriteScreen(
                 onNavigateBack = {
                     navController.popBackStack()
+                },
+                onImagePick = {
+                    // TODO: Implement image picker
+                },
+                onCameraTake = {
+                    // TODO: Implement camera
                 }
             )
         }
@@ -42,14 +48,3 @@ fun MoodLogNavigation(
     }
 }
 
-@Composable
-fun WriteScreenPlaceholder(
-    onNavigateBack: () -> Unit
-) {
-    androidx.compose.foundation.layout.Column {
-        androidx.compose.material3.Text("Write Screen - Coming Soon!")
-        androidx.compose.material3.Button(onClick = onNavigateBack) {
-            androidx.compose.material3.Text("Back")
-        }
-    }
-}
