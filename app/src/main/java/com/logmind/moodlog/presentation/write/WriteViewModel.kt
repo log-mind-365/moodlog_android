@@ -1,5 +1,6 @@
 package com.logmind.moodlog.presentation.write
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.logmind.moodlog.domain.common.Result
@@ -15,12 +16,13 @@ import javax.inject.Inject
 data class WriteUiState(
     val selectedMood: MoodType = MoodType.NEUTRAL,
     val content: String = "",
-    val imageUris: List<String> = emptyList(),
+    val imageUris: List<Uri> = emptyList(),
     val availableTags: List<Tag> = emptyList(),
     val selectedTags: Set<Int> = emptySet(),
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
-    val canSave: Boolean = false
+    val canSave: Boolean = false,
+    val isSaved: Boolean = false
 )
 
 @HiltViewModel
@@ -51,16 +53,25 @@ class WriteViewModel @Inject constructor(
         updateCanSave()
     }
 
-    fun addImage(uri: String) {
+    fun updateImages(images: List<Uri>) {
+        _uiState.update { 
+            it.copy(imageUris = images)
+        }
+        updateCanSave()
+    }
+
+    fun addImage(uri: Uri) {
         _uiState.update { 
             it.copy(imageUris = it.imageUris + uri)
         }
+        updateCanSave()
     }
 
-    fun removeImage(uri: String) {
+    fun removeImage(uri: Uri) {
         _uiState.update { 
             it.copy(imageUris = it.imageUris - uri)
         }
+        updateCanSave()
     }
 
     fun toggleTag(tagId: Int) {
@@ -118,7 +129,7 @@ class WriteViewModel @Inject constructor(
             val dto = CreateJournalDto(
                 content = currentState.content.takeIf { it.isNotBlank() },
                 moodType = currentState.selectedMood,
-                imageUris = currentState.imageUris.takeIf { it.isNotEmpty() },
+                imageUris = currentState.imageUris.map { it.toString() }.takeIf { it.isNotEmpty() },
                 aiResponseEnabled = false, // TODO: settings에서 가져오기
                 aiResponse = null,
                 createdAt = LocalDateTime.now(),
@@ -143,7 +154,8 @@ class WriteViewModel @Inject constructor(
                                 _uiState.update { 
                                     it.copy(
                                         isLoading = false,
-                                        errorMessage = null
+                                        errorMessage = null,
+                                        isSaved = true
                                     )
                                 }
                             }
@@ -160,12 +172,11 @@ class WriteViewModel @Inject constructor(
                         _uiState.update { 
                             it.copy(
                                 isLoading = false,
-                                errorMessage = null
+                                errorMessage = null,
+                                isSaved = true
                             )
                         }
                     }
-                    
-                    // TODO: Navigate back to home
                 }
                 is Result.Error -> {
                     _uiState.update { 

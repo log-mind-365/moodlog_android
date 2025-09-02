@@ -1,8 +1,10 @@
 package com.logmind.moodlog.di
 
 import com.logmind.moodlog.data.repositories.JournalRepositoryImpl
+import com.logmind.moodlog.data.repositories.SettingsRepositoryImpl
 import com.logmind.moodlog.data.repositories.TagRepositoryImpl
 import com.logmind.moodlog.domain.repositories.JournalRepository
+import com.logmind.moodlog.domain.repositories.SettingsRepository
 import com.logmind.moodlog.domain.repositories.TagRepository
 import dagger.Binds
 import dagger.Module
@@ -25,4 +27,10 @@ abstract class RepositoryModule {
     abstract fun bindTagRepository(
         tagRepositoryImpl: TagRepositoryImpl
     ): TagRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindSettingsRepository(
+        settingsRepositoryImpl: SettingsRepositoryImpl
+    ): SettingsRepository
 }

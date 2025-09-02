@@ -1,0 +1,368 @@
+package com.logmind.moodlog.presentation.settings
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.logmind.moodlog.domain.entities.*
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SettingsScreen(
+    onNavigateBack: () -> Unit,
+    viewModel: SettingsViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("설정") },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "뒤로")
+                    }
+                }
+            )
+        }
+    ) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            item {
+                ThemeSection(
+                    currentTheme = uiState.themeMode,
+                    onThemeChange = viewModel::updateThemeMode
+                )
+            }
+            
+            item {
+                LanguageSection(
+                    currentLanguage = uiState.languageCode,
+                    onLanguageChange = viewModel::updateLanguage
+                )
+            }
+            
+            item {
+                ColorThemeSection(
+                    currentColorTheme = uiState.colorTheme,
+                    onColorThemeChange = viewModel::updateColorTheme
+                )
+            }
+            
+            item {
+                FontSection(
+                    currentFont = uiState.fontFamily,
+                    onFontChange = viewModel::updateFontFamily
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ThemeSection(
+    currentTheme: ThemeMode,
+    onThemeChange: (ThemeMode) -> Unit
+) {
+    SettingsCard(
+        title = "테마 설정",
+        icon = Icons.Default.Settings
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            ThemeMode.entries.forEach { theme ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .selectable(
+                            selected = currentTheme == theme,
+                            onClick = { onThemeChange(theme) }
+                        )
+                        .padding(vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(
+                        selected = currentTheme == theme,
+                        onClick = { onThemeChange(theme) }
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = when (theme) {
+                            ThemeMode.LIGHT -> "라이트 테마"
+                            ThemeMode.DARK -> "다크 테마"
+                            ThemeMode.SYSTEM -> "시스템 설정 따르기"
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun LanguageSection(
+    currentLanguage: LanguageCode,
+    onLanguageChange: (LanguageCode) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    SettingsCard(
+        title = "언어 설정",
+        icon = Icons.Default.Settings
+    ) {
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = { expanded = it }
+        ) {
+            OutlinedTextField(
+                value = getLanguageDisplayName(currentLanguage),
+                onValueChange = {},
+                readOnly = true,
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .menuAnchor()
+            )
+            
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                LanguageCode.entries.forEach { language ->
+                    DropdownMenuItem(
+                        text = { Text(getLanguageDisplayName(language)) },
+                        onClick = {
+                            onLanguageChange(language)
+                            expanded = false
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ColorThemeSection(
+    currentColorTheme: ColorTheme,
+    onColorThemeChange: (ColorTheme) -> Unit
+) {
+    SettingsCard(
+        title = "컬러 테마",
+        icon = Icons.Default.Settings
+    ) {
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(4),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.height(200.dp)
+        ) {
+            items(ColorTheme.entries) { colorTheme ->
+                ColorThemeItem(
+                    colorTheme = colorTheme,
+                    isSelected = currentColorTheme == colorTheme,
+                    onSelect = { onColorThemeChange(colorTheme) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ColorThemeItem(
+    colorTheme: ColorTheme,
+    isSelected: Boolean,
+    onSelect: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .size(60.dp)
+            .clip(CircleShape)
+            .selectable(
+                selected = isSelected,
+                onClick = onSelect
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            // TODO: 실제 색상으로 대체
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                shape = CircleShape,
+                color = getColorThemePreviewColor(colorTheme)
+            ) {}
+            
+            if (isSelected) {
+                Icon(
+                    Icons.Default.Check,
+                    contentDescription = "선택됨",
+                    tint = Color.White,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun FontSection(
+    currentFont: FontFamily,
+    onFontChange: (FontFamily) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    SettingsCard(
+        title = "폰트 설정",
+        icon = Icons.Default.Settings
+    ) {
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = { expanded = it }
+        ) {
+            OutlinedTextField(
+                value = getFontDisplayName(currentFont),
+                onValueChange = {},
+                readOnly = true,
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .menuAnchor()
+            )
+            
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                FontFamily.entries.forEach { fontFamily ->
+                    DropdownMenuItem(
+                        text = { Text(getFontDisplayName(fontFamily)) },
+                        onClick = {
+                            onFontChange(fontFamily)
+                            expanded = false
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SettingsCard(
+    title: String,
+    icon: ImageVector,
+    content: @Composable () -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+            
+            content()
+        }
+    }
+}
+
+private fun getLanguageDisplayName(languageCode: LanguageCode): String {
+    return when (languageCode) {
+        LanguageCode.KO -> "한국어"
+        LanguageCode.EN -> "English"
+        LanguageCode.JA -> "日本語"
+        LanguageCode.ZH -> "中文"
+        LanguageCode.ES -> "Español"
+        LanguageCode.IT -> "Italiano"
+        LanguageCode.FR -> "Français"
+        LanguageCode.VI -> "Tiếng Việt"
+        LanguageCode.TH -> "ไทย"
+    }
+}
+
+private fun getFontDisplayName(fontFamily: FontFamily): String {
+    return when (fontFamily) {
+        FontFamily.PRETENDARD -> "프리텐다드"
+        FontFamily.LEE_SEOYUN -> "이서윤체"
+        FontFamily.ORBIT_OF_THE_MOON -> "달의궤도체"
+        FontFamily.RESTART -> "리스타트체"
+        FontFamily.OVERCOME -> "오버컴체"
+        FontFamily.SYSTEM -> "시스템"
+    }
+}
+
+private fun getColorThemePreviewColor(colorTheme: ColorTheme): Color {
+    return when (colorTheme) {
+        ColorTheme.RED -> Color(0xFFD32F2F)
+        ColorTheme.PINK -> Color(0xFFE91E63)
+        ColorTheme.PURPLE -> Color(0xFF7B1FA2)
+        ColorTheme.DEEP_PURPLE -> Color(0xFF512DA8)
+        ColorTheme.INDIGO -> Color(0xFF303F9F)
+        ColorTheme.BLUE -> Color(0xFF1976D2)
+        ColorTheme.LIGHT_BLUE -> Color(0xFF0288D1)
+        ColorTheme.CYAN -> Color(0xFF0097A7)
+        ColorTheme.TEAL -> Color(0xFF00796B)
+        ColorTheme.GREEN -> Color(0xFF388E3C)
+        ColorTheme.LIGHT_GREEN -> Color(0xFF689F38)
+        ColorTheme.LIME -> Color(0xFF689F38)
+        ColorTheme.YELLOW -> Color(0xFFFBC02D)
+        ColorTheme.AMBER -> Color(0xFFFFA000)
+        ColorTheme.ORANGE -> Color(0xFFFF9800)
+        ColorTheme.DEEP_ORANGE -> Color(0xFFFF5722)
+        ColorTheme.BROWN -> Color(0xFF5D4037)
+        ColorTheme.GREY -> Color(0xFF757575)
+        ColorTheme.BLUE_GREY -> Color(0xFF455A64)
+    }
+}

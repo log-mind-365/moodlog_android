@@ -29,6 +29,13 @@ interface JournalDao {
     """)
     suspend fun getJournalsByMonth(date: LocalDateTime): List<JournalEntity>
     
+    @Query("""
+        SELECT * FROM journals 
+        WHERE created_at BETWEEN :startDate AND :endDate
+        ORDER BY created_at DESC
+    """)
+    suspend fun getJournalsByDateRange(startDate: LocalDateTime, endDate: LocalDateTime): List<JournalEntity>
+    
     @Query("SELECT * FROM journals WHERE id = :id")
     suspend fun getJournalById(id: Int): JournalEntity?
     

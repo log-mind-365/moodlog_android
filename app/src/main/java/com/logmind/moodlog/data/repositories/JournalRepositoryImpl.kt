@@ -117,6 +117,19 @@ class JournalRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getJournalsByDateRange(startDate: LocalDateTime, endDate: LocalDateTime): Result<List<Journal>> {
+        return try {
+            val entities = journalDao.getJournalsByDateRange(startDate, endDate)
+            val journals = entities.map { entity ->
+                val tags = tagDao.getTagsByJournalId(entity.id).map { it.toDomainModel() }
+                entity.toDomainModel(tags)
+            }
+            Result.success(journals)
+        } catch (e: Throwable) {
+            Result.error(e)
+        }
+    }
+
     override suspend fun deleteJournalById(id: Int): Result<Unit> {
         return try {
             journalDao.deleteJournalById(id)

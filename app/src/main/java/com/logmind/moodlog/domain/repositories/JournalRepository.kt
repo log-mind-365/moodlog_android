@@ -16,6 +16,8 @@ interface JournalRepository {
 
     suspend fun getJournalsByDate(date: LocalDateTime): Result<List<Journal>>
 
+    suspend fun getJournalsByDateRange(startDate: LocalDateTime, endDate: LocalDateTime): Result<List<Journal>>
+
     suspend fun getJournalById(id: Int): Result<Journal>
 
     suspend fun addJournal(dto: CreateJournalDto): Result<Map<String, Any>>
