@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SurfaceCard(
+fun MdlCard(
     modifier: Modifier = Modifier,
     shape: Shape = CardDefaults.shape,
     containerColor: Color = MaterialTheme.colorScheme.surface,

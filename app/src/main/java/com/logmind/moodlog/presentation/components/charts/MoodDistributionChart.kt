@@ -31,13 +31,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.res.stringResource
 import com.logmind.moodlog.R
 import com.logmind.moodlog.presentation.statistics.MoodDistribution
-import com.logmind.moodlog.ui.components.SurfaceCard
+import com.logmind.moodlog.ui.components.MdlCard
 
 @Composable
 fun MoodDistributionChart(
@@ -55,7 +55,7 @@ fun MoodDistributionChart(
         animationProgress = if (data.isNotEmpty()) 1f else 0f
     }
 
-    SurfaceCard {
+    MdlCard {
         Column(
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)

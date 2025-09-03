@@ -12,14 +12,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.logmind.moodlog.R
-import com.logmind.moodlog.ui.components.SurfaceCard
+import com.logmind.moodlog.ui.components.MdlCard
 
 data class StatisticCard(
     val title: String,
@@ -62,7 +62,9 @@ fun StatisticsCards(
             title = "최고의 날",
             value = bestMoodDay ?: stringResource(R.string.none),
             emoji = "⭐",
-            subtitle = if (bestMoodDay != null) stringResource(R.string.statistics_best_day) else stringResource(R.string.statistics_record_now),
+            subtitle = if (bestMoodDay != null) stringResource(R.string.statistics_best_day) else stringResource(
+                R.string.statistics_record_now
+            ),
             color = Color(0xFF4CAF50)
         )
     )
@@ -96,7 +98,7 @@ private fun StatisticCardItem(
     modifier: Modifier = Modifier,
     card: StatisticCard,
 ) {
-    SurfaceCard(
+    MdlCard(
         modifier = modifier.semantics {
             contentDescription = "${card.title}: ${card.value}. ${card.subtitle ?: ""}"
         }

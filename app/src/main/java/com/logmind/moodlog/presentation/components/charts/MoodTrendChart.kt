@@ -34,7 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.logmind.moodlog.presentation.statistics.MoodTrendPoint
-import com.logmind.moodlog.ui.components.SurfaceCard
+import com.logmind.moodlog.ui.components.MdlCard
 
 @Composable
 fun MoodTrendChart(
@@ -52,7 +52,7 @@ fun MoodTrendChart(
         animationProgress = if (data.isNotEmpty()) 1f else 0f
     }
 
-    SurfaceCard {
+    MdlCard {
         Column(
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)

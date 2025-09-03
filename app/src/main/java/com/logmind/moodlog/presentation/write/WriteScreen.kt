@@ -1,105 +1,114 @@
 package com.logmind.moodlog.presentation.write
 
 import android.net.Uri
-import androidx.compose.foundation.background
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Card
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.logmind.moodlog.R
 import com.logmind.moodlog.domain.entities.MoodType
 import com.logmind.moodlog.domain.entities.Tag
 import com.logmind.moodlog.presentation.components.ImagePicker
 import com.logmind.moodlog.presentation.components.TagPicker
-import com.logmind.moodlog.ui.components.SurfaceCard
+import com.logmind.moodlog.ui.components.MdlCard
+import com.logmind.moodlog.ui.components.MdlScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WriteScreen(
-    onNavigateBack: () -> Unit,
+    navController: NavHostController,
+    redirectHome: () -> Unit,
     onImagePick: () -> Unit = {},
     onCameraTake: () -> Unit = {},
     viewModel: WriteViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    Scaffold(
+    if (uiState.isLoading) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+    }
+
+    uiState.errorMessage?.let { message ->
+        LaunchedEffect(message) {
+            // Show snackbar or error dialog
+        }
+    }
+
+    // Handle navigation after successful save
+    LaunchedEffect(uiState.isSaved) {
+        if (uiState.isSaved) {
+            redirectHome()
+        }
+    }
+
+    MdlScaffold(
+        navController = navController,
+        showBottomBar = false,
+        showFab = false,
         topBar = {
             TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                ),
                 title = { Text(stringResource(R.string.write_title)) },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.Close, contentDescription = stringResource(R.string.content_desc_close))
-                    }
-                },
-                actions = {
-                    TextButton(
-                        onClick = { viewModel.saveJournal() },
-                        enabled = uiState.canSave
-                    ) {
-                        Text(stringResource(R.string.save))
+                    IconButton(onClick = {
+                        navController.popBackStack()
+                    }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "back button"
+                        )
                     }
                 }
             )
-        }
-    ) { paddingValues ->
+        }) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+                .padding(innerPadding)
                 .padding(dimensionResource(R.dimen.screen_padding))
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_xxl))
@@ -128,27 +137,7 @@ fun WriteScreen(
         }
     }
 
-    if (uiState.isLoading) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator()
-        }
-    }
 
-    uiState.errorMessage?.let { message ->
-        LaunchedEffect(message) {
-            // Show snackbar or error dialog
-        }
-    }
-    
-    // Handle navigation after successful save
-    LaunchedEffect(uiState.isSaved) {
-        if (uiState.isSaved) {
-            onNavigateBack()
-        }
-    }
 }
 
 @Composable
@@ -156,7 +145,7 @@ private fun MoodSlider(
     selectedMood: MoodType,
     onMoodChange: (MoodType) -> Unit
 ) {
-    SurfaceCard {
+    MdlCard {
         Column(
             modifier = Modifier.padding(dimensionResource(R.dimen.card_padding)),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_l))
@@ -176,7 +165,7 @@ private fun MoodSlider(
                     animationSpec = tween(durationMillis = 300),
                     label = "emoji_scale"
                 )
-                
+
                 Text(
                     text = selectedMood.emoji,
                     fontSize = 48.sp,
@@ -185,7 +174,7 @@ private fun MoodSlider(
                         .semantics {
                             contentDescription = when (selectedMood) {
                                 MoodType.VERY_HAPPY -> "매우 기쁜 감정"
-                                MoodType.HAPPY -> "기쁜 감정" 
+                                MoodType.HAPPY -> "기쁜 감정"
                                 MoodType.NEUTRAL -> "보통 감정"
                                 MoodType.SAD -> "슬픈 감정"
                                 MoodType.VERY_SAD -> "매우 슬픈 감정"
@@ -231,7 +220,7 @@ private fun ContentInput(
     content: String,
     onContentChange: (String) -> Unit
 ) {
-    SurfaceCard {
+    MdlCard {
         Column(
             modifier = Modifier.padding(dimensionResource(R.dimen.card_padding)),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_m))
@@ -260,7 +249,7 @@ private fun ModernImageSection(
     images: List<Uri>,
     onImagesChanged: (List<Uri>) -> Unit
 ) {
-    SurfaceCard {
+    MdlCard {
         Column(
             modifier = Modifier.padding(dimensionResource(R.dimen.card_padding)),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_m))
@@ -286,7 +275,7 @@ private fun ModernTagSection(
     onTagToggle: (Int) -> Unit,
     onNewTagCreate: (String) -> Unit
 ) {
-    SurfaceCard {
+    MdlCard {
         Box(
             modifier = Modifier.padding(dimensionResource(R.dimen.card_padding))
         ) {
