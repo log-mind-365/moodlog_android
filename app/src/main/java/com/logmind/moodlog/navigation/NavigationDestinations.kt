@@ -1,4 +1,4 @@
-package com.logmind.moodlog.presentation.navigation
+package com.logmind.moodlog.navigation
 
 sealed class Screen(val route: String) {
     object Auth : Screen("auth")

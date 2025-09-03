@@ -16,8 +16,8 @@ import androidx.compose.ui.unit.dp
 fun MdlCard(
     modifier: Modifier = Modifier,
     shape: Shape = CardDefaults.shape,
-    containerColor: Color = MaterialTheme.colorScheme.surface,
-    contentColor: Color = MaterialTheme.colorScheme.onSurface,
+    containerColor: Color = MaterialTheme.colorScheme.background,
+    contentColor: Color = MaterialTheme.colorScheme.onBackground,
     elevation: CardElevation = CardDefaults.cardElevation(),
     border: BorderStroke? = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceContainerHigh),
     onClick: (() -> Unit)? = null,

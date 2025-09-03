@@ -3,7 +3,6 @@ package com.logmind.moodlog.ui.theme
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.googlefonts.Font
 import androidx.compose.ui.text.googlefonts.GoogleFont
 import androidx.compose.ui.unit.sp
 import com.logmind.moodlog.R
@@ -49,9 +48,9 @@ fun getTypographyForFont(fontFamily: com.logmind.moodlog.domain.entities.FontFam
         com.logmind.moodlog.domain.entities.FontFamily.OVERCOME -> pretendardFontFamily // 실제 폰트 리소스로 대체 필요
         com.logmind.moodlog.domain.entities.FontFamily.SYSTEM -> systemFontFamily
     }
-    
+
     val baseFontSize = fontFamily.fixedFontSize?.sp ?: 16.sp
-    
+
     return Typography(
         displayLarge = baseline.displayLarge.copy(
             fontFamily = selectedFontFamily,

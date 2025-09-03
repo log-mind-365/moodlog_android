@@ -1,4 +1,4 @@
-package com.logmind.moodlog.presentation.components
+package com.logmind.moodlog.presentation.write.components
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -40,9 +40,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import androidx.compose.ui.res.stringResource
 import com.logmind.moodlog.R
 import com.logmind.moodlog.utils.ImagePickerHelper
 import kotlinx.coroutines.launch

@@ -1,4 +1,4 @@
-package com.logmind.moodlog.presentation.components
+package com.logmind.moodlog.presentation.statistics.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

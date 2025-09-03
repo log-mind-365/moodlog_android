@@ -1,21 +1,20 @@
-package com.logmind.moodlog.presentation.navigation
+package com.logmind.moodlog.navigation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavOptionsBuilder
@@ -24,7 +23,7 @@ import androidx.navigation.NavOptionsBuilder
 fun MoodLogBottomNavigation(
     navigate: (String, NavOptionsBuilder.() -> Unit) -> Unit,
     currentRoute: String?,
-    startDestinationId: Int,
+    startDestinationId: Int?,
     showBottomBar: Boolean,
 ) {
     AnimatedVisibility(
@@ -36,17 +35,8 @@ fun MoodLogBottomNavigation(
             bottomNavigationItems.forEach { item ->
                 val selected = currentRoute == item.route
 
-                val iconScale by animateFloatAsState(
-                    targetValue = if (selected) 1.2f else 1f,
-                    animationSpec = tween(
-                        durationMillis = 200,
-                        easing = FastOutSlowInEasing
-                    ),
-                    label = "icon_scale"
-                )
-
                 val iconTint by animateColorAsState(
-                    targetValue = if (selected) Color.Unspecified else Color.Unspecified,
+                    targetValue = if (selected) MaterialTheme.colorScheme.onPrimary else Color.Unspecified,
                     animationSpec = tween(
                         durationMillis = 200,
                         easing = FastOutSlowInEasing
@@ -61,8 +51,7 @@ fun MoodLogBottomNavigation(
                             contentDescription = item.label,
                             tint = iconTint,
                             modifier = Modifier
-                                .scale(iconScale)
-                                .size(24.dp)
+                                .size(20.dp)
                         )
                     },
                     label = { Text(item.label) },
@@ -70,8 +59,10 @@ fun MoodLogBottomNavigation(
                     onClick = {
                         if (currentRoute != item.route) {
                             navigate(item.route) {
-                                popUpTo(startDestinationId) {
-                                    saveState = true
+                                startDestinationId?.let { destinationId ->
+                                    popUpTo(destinationId) {
+                                        saveState = true
+                                    }
                                 }
                                 launchSingleTop = true
                                 restoreState = true

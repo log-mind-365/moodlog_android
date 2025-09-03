@@ -12,19 +12,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -40,19 +34,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import com.logmind.moodlog.R
 import com.logmind.moodlog.domain.entities.MoodType
 import com.logmind.moodlog.domain.entities.Tag
-import com.logmind.moodlog.presentation.components.ImagePicker
-import com.logmind.moodlog.presentation.components.TagPicker
+import com.logmind.moodlog.presentation.write.components.ImagePicker
+import com.logmind.moodlog.presentation.write.components.TagPicker
 import com.logmind.moodlog.ui.components.MdlCard
-import com.logmind.moodlog.ui.components.MdlScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WriteScreen(
-    navController: NavHostController,
     redirectHome: () -> Unit,
     onImagePick: () -> Unit = {},
     onCameraTake: () -> Unit = {},
@@ -82,62 +73,35 @@ fun WriteScreen(
         }
     }
 
-    MdlScaffold(
-        navController = navController,
-        showBottomBar = false,
-        showFab = false,
-        topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,
-                ),
-                title = { Text(stringResource(R.string.write_title)) },
-                navigationIcon = {
-                    IconButton(onClick = {
-                        navController.popBackStack()
-                    }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "back button"
-                        )
-                    }
-                }
-            )
-        }) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(dimensionResource(R.dimen.screen_padding))
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_xxl))
-        ) {
-            MoodSlider(
-                selectedMood = uiState.selectedMood,
-                onMoodChange = viewModel::updateMood
-            )
 
-            ContentInput(
-                content = uiState.content,
-                onContentChange = viewModel::updateContent
-            )
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_xxl))
+    ) {
+        MoodSlider(
+            selectedMood = uiState.selectedMood,
+            onMoodChange = viewModel::updateMood
+        )
 
-            ModernImageSection(
-                images = uiState.imageUris,
-                onImagesChanged = viewModel::updateImages
-            )
+        ContentInput(
+            content = uiState.content,
+            onContentChange = viewModel::updateContent
+        )
 
-            ModernTagSection(
-                availableTags = uiState.availableTags,
-                selectedTags = uiState.selectedTags,
-                onTagToggle = viewModel::toggleTag,
-                onNewTagCreate = viewModel::createNewTag
-            )
-        }
+        ModernImageSection(
+            images = uiState.imageUris,
+            onImagesChanged = viewModel::updateImages
+        )
+
+        ModernTagSection(
+            availableTags = uiState.availableTags,
+            selectedTags = uiState.selectedTags,
+            onTagToggle = viewModel::toggleTag,
+            onNewTagCreate = viewModel::createNewTag
+        )
     }
-
-
 }
 
 @Composable

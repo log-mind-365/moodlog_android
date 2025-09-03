@@ -10,7 +10,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.logmind.moodlog.presentation.navigation.MoodLogNavigation
+import com.logmind.moodlog.navigation.MoodLogNavigation
 import com.logmind.moodlog.ui.theme.MoodLogTheme
 import com.logmind.moodlog.utils.toLocale
 import dagger.hilt.android.AndroidEntryPoint

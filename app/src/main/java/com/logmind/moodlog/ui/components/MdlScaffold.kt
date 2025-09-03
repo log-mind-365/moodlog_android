@@ -4,7 +4,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
@@ -13,10 +14,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.logmind.moodlog.presentation.navigation.MoodLogBottomNavigation
-import com.logmind.moodlog.presentation.navigation.Screen
+import com.logmind.moodlog.R
+import com.logmind.moodlog.navigation.MoodLogBottomNavigation
+import com.logmind.moodlog.navigation.Screen
 
 @Composable
 fun MdlScaffold(
@@ -24,7 +28,7 @@ fun MdlScaffold(
     topBar: @Composable () -> Unit,
     showFab: Boolean = true,
     showBottomBar: Boolean = true,
-    content: @Composable (PaddingValues) -> Unit
+    content: @Composable () -> Unit
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -47,7 +51,7 @@ fun MdlScaffold(
                             navOptionsBuilder
                         )
                     },
-                    startDestinationId = navController.graph.startDestinationId
+                    startDestinationId = navController.currentDestination?.id
                 )
             }
         },
@@ -65,6 +69,12 @@ fun MdlScaffold(
             }
         }
     ) { innerPadding ->
-        content(innerPadding)
+        Box(
+            modifier = Modifier
+                .padding(innerPadding)
+                .padding(horizontal = dimensionResource(R.dimen.horizontal_padding))
+        ) {
+            content()
+        }
     }
 }

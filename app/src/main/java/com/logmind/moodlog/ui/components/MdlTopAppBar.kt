@@ -10,7 +10,7 @@ import androidx.compose.ui.text.font.FontWeight
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MdlAppBar(
+fun MdlTopAppBar(
     title: String,
     actions: @Composable () -> Unit = {},
     navigationIcon: @Composable () -> Unit = {}

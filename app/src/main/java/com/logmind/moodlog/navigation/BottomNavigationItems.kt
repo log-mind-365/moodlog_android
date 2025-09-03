@@ -1,4 +1,4 @@
-package com.logmind.moodlog.presentation.navigation
+package com.logmind.moodlog.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home

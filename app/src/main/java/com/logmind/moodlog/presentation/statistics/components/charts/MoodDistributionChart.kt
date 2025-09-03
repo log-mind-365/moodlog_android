@@ -1,4 +1,4 @@
-package com.logmind.moodlog.presentation.components.charts
+package com.logmind.moodlog.presentation.statistics.components.charts
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
