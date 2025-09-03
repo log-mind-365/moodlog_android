@@ -11,6 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import com.logmind.moodlog.domain.entities.FontFamily
+import com.logmind.moodlog.domain.entities.ThemeMode
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -254,11 +256,19 @@ val unspecified_scheme = ColorFamily(
 
 @Composable
 fun MoodLogTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
+    themeMode: ThemeMode = ThemeMode.SYSTEM,
+    fontFamily: FontFamily = FontFamily.PRETENDARD,
     dynamicColor: Boolean = true,
     content: @Composable() () -> Unit
 ) {
+    val systemInDarkTheme = isSystemInDarkTheme()
+
+    val darkTheme = when (themeMode) {
+        ThemeMode.LIGHT -> false
+        ThemeMode.DARK -> true
+        ThemeMode.SYSTEM -> systemInDarkTheme
+    }
+
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
@@ -269,9 +279,11 @@ fun MoodLogTheme(
         else -> lightScheme
     }
 
+    val typography = getTypographyForFont(fontFamily)
+
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = AppTypography,
+        typography = typography,
         content = content
     )
 }

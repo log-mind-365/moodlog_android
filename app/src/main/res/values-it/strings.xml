@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">moodlog</string>
+    
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_write">Scrivi</string>
+    <string name="nav_statistics">Statistiche</string>
+    <string name="nav_settings">Impostazioni</string>
+    
+    <!-- Home Screen -->
+    <string name="home_title">Emozioni di oggi</string>
+    <string name="home_no_entries">Nessun record ancora</string>
+    <string name="home_start_journaling">Prova a scrivere un diario</string>
+    <string name="home_today">Oggi</string>
+    <string name="home_entries_count">%1$d record</string>
+</resources>

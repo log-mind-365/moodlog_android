@@ -1,9 +1,21 @@
 package com.logmind.moodlog.data.repositories
 
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.*
-import com.logmind.moodlog.domain.entities.*
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.stringSetPreferencesKey
+import com.logmind.moodlog.domain.entities.AiPersonality
+import com.logmind.moodlog.domain.entities.AppInfo
+import com.logmind.moodlog.domain.entities.ColorTheme
+import com.logmind.moodlog.domain.entities.FontFamily
+import com.logmind.moodlog.domain.entities.LanguageCode
+import com.logmind.moodlog.domain.entities.LoginType
+import com.logmind.moodlog.domain.entities.SimpleTextAlign
+import com.logmind.moodlog.domain.entities.ThemeMode
 import com.logmind.moodlog.domain.repositories.SettingsRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.time.LocalDateTime
@@ -27,30 +39,34 @@ class SettingsRepositoryImpl @Inject constructor(
         private val TEXT_ALIGN_KEY = stringPreferencesKey("text_align")
         private val ONBOARDED_LOGIN_TYPES_KEY = stringSetPreferencesKey("onboarded_login_types")
         private val LAST_AI_USAGE_DATE_KEY = stringPreferencesKey("last_ai_usage_date")
-        
+
         private val dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
     }
 
-    override suspend fun getThemeMode(): ThemeMode {
+    override fun getThemeMode(): Flow<ThemeMode> {
         return dataStore.data.map { preferences ->
-            preferences[THEME_MODE_KEY]?.let { 
-                ThemeMode.valueOf(it) 
+            preferences[THEME_MODE_KEY]?.let {
+                ThemeMode.fromString(it)
             } ?: ThemeMode.SYSTEM
-        }.first()
+        }
     }
 
-    override suspend fun getLanguageCode(): LanguageCode {
+    override fun getLanguageCode(): Flow<LanguageCode> {
         return dataStore.data.map { preferences ->
-            preferences[LANGUAGE_CODE_KEY]?.let { 
-                LanguageCode.valueOf(it) 
+            preferences[LANGUAGE_CODE_KEY]?.let {
+                LanguageCode.fromString(it)
             } ?: LanguageCode.KO
-        }.first()
+        }
     }
 
     override suspend fun getAiPersonality(): AiPersonality {
         return dataStore.data.map { preferences ->
-            preferences[AI_PERSONALITY_KEY]?.let { 
-                AiPersonality.valueOf(it) 
+            preferences[AI_PERSONALITY_KEY]?.let {
+                try {
+                    AiPersonality.valueOf(it)
+                } catch (e: Exception) {
+                    AiPersonality.BALANCED
+                }
             } ?: AiPersonality.BALANCED
         }.first()
     }
@@ -67,26 +83,18 @@ class SettingsRepositoryImpl @Inject constructor(
         }.first()
     }
 
-    override suspend fun getColorTheme(): ColorTheme {
+    override fun getFontFamily(): Flow<FontFamily> {
         return dataStore.data.map { preferences ->
-            preferences[COLOR_THEME_KEY]?.let { 
-                ColorTheme.valueOf(it) 
-            } ?: ColorTheme.BLUE
-        }.first()
-    }
-
-    override suspend fun getFontFamily(): FontFamily {
-        return dataStore.data.map { preferences ->
-            preferences[FONT_FAMILY_KEY]?.let { 
-                FontFamily.valueOf(it) 
+            preferences[FONT_FAMILY_KEY]?.let {
+                FontFamily.fromString(it)
             } ?: FontFamily.PRETENDARD
-        }.first()
+        }
     }
 
     override suspend fun getTextAlign(): SimpleTextAlign {
         return dataStore.data.map { preferences ->
-            preferences[TEXT_ALIGN_KEY]?.let { 
-                SimpleTextAlign.valueOf(it) 
+            preferences[TEXT_ALIGN_KEY]?.let {
+                SimpleTextAlign.fromString(it)
             } ?: SimpleTextAlign.LEFT
         }.first()
     }
@@ -115,13 +123,13 @@ class SettingsRepositoryImpl @Inject constructor(
 
     override suspend fun updateThemeMode(themeMode: ThemeMode) {
         dataStore.edit { preferences ->
-            preferences[THEME_MODE_KEY] = themeMode.name
+            preferences[THEME_MODE_KEY] = themeMode.value
         }
     }
 
     override suspend fun updateLanguage(languageCode: LanguageCode) {
         dataStore.edit { preferences ->
-            preferences[LANGUAGE_CODE_KEY] = languageCode.name
+            preferences[LANGUAGE_CODE_KEY] = languageCode.value
         }
     }
 
@@ -139,19 +147,19 @@ class SettingsRepositoryImpl @Inject constructor(
 
     override suspend fun updateColorTheme(colorTheme: ColorTheme) {
         dataStore.edit { preferences ->
-            preferences[COLOR_THEME_KEY] = colorTheme.name
+            preferences[COLOR_THEME_KEY] = colorTheme.value
         }
     }
 
     override suspend fun updateFontFamily(fontFamily: FontFamily) {
         dataStore.edit { preferences ->
-            preferences[FONT_FAMILY_KEY] = fontFamily.name
+            preferences[FONT_FAMILY_KEY] = fontFamily.value
         }
     }
 
     override suspend fun updateTextAlign(textAlign: SimpleTextAlign) {
         dataStore.edit { preferences ->
-            preferences[TEXT_ALIGN_KEY] = textAlign.name
+            preferences[TEXT_ALIGN_KEY] = textAlign.value
         }
     }
 

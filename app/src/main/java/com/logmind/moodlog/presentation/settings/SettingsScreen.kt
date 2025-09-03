@@ -1,22 +1,24 @@
 package com.logmind.moodlog.presentation.settings
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.logmind.moodlog.R
+import com.logmind.moodlog.presentation.navigation.Screen
 import com.logmind.moodlog.presentation.settings.components.FontSection
 import com.logmind.moodlog.presentation.settings.components.LanguageSection
+import com.logmind.moodlog.presentation.settings.components.SectionCard
 import com.logmind.moodlog.presentation.settings.components.ThemeSection
 import com.logmind.moodlog.ui.components.MdlAppBar
 import com.logmind.moodlog.ui.components.MdlAvatar
@@ -30,14 +32,15 @@ fun SettingsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-
     MdlScaffold(
         navController = navController,
         topBar = {
             MdlAppBar(
                 title = stringResource(R.string.nav_settings),
                 actions = {
-                    MdlAvatar()
+                    MdlAvatar(onClick = {
+                        navController.navigate(Screen.Profile.route)
+                    })
                 }
             )
         },
@@ -47,10 +50,9 @@ fun SettingsScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(dimensionResource(R.dimen.screen_padding)),
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_l))
         ) {
             item {
-                com.logmind.moodlog.presentation.settings.components.SectionCard(
+                SectionCard(
                     title = "기본 설정"
                 ) {
                     ThemeSection(
@@ -58,9 +60,8 @@ fun SettingsScreen(
                         onThemeChange = viewModel::updateThemeMode
                     )
 
-                    androidx.compose.material3.HorizontalDivider(
-                        modifier = androidx.compose.ui.Modifier.padding(vertical = 8.dp),
-                        color = androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant
+                    HorizontalDivider(
+                        color = MaterialTheme.colorScheme.surfaceVariant
                     )
 
                     LanguageSection(
@@ -68,9 +69,8 @@ fun SettingsScreen(
                         onLanguageChange = viewModel::updateLanguage
                     )
 
-                    androidx.compose.material3.HorizontalDivider(
-                        modifier = androidx.compose.ui.Modifier.padding(vertical = 8.dp),
-                        color = androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant
+                    HorizontalDivider(
+                        color = MaterialTheme.colorScheme.surfaceVariant
                     )
 
                     FontSection(

@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
     implementation(libs.androidx.ui.text.google.fonts)
+    implementation(libs.androidx.appcompat)
     ksp(libs.hilt.compiler)
 
     // Room
@@ -90,6 +91,9 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-analytics")
+    
+    // Google Sign-In
+    implementation(libs.google.signin)
 
     // Testing
     testImplementation(libs.junit)

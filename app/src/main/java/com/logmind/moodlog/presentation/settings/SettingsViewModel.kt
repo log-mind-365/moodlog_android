@@ -2,10 +2,16 @@ package com.logmind.moodlog.presentation.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.logmind.moodlog.domain.entities.*
+import com.logmind.moodlog.domain.entities.ColorTheme
+import com.logmind.moodlog.domain.entities.FontFamily
+import com.logmind.moodlog.domain.entities.LanguageCode
+import com.logmind.moodlog.domain.entities.ThemeMode
 import com.logmind.moodlog.domain.repositories.SettingsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -14,16 +20,6 @@ data class SettingsUiState(
     val languageCode: LanguageCode = LanguageCode.KO,
     val colorTheme: ColorTheme = ColorTheme.BLUE,
     val fontFamily: FontFamily = FontFamily.PRETENDARD,
-    val textAlign: SimpleTextAlign = SimpleTextAlign.LEFT,
-    val aiPersonality: AiPersonality = AiPersonality.BALANCED,
-    val hasNotificationEnabled: Boolean = true,
-    val hasAutoSyncEnabled: Boolean = true,
-    val appInfo: AppInfo = AppInfo(
-        appName = "MoodLog",
-        packageName = "com.logmind.moodlog",
-        version = "1.0.0",
-        buildNumber = "1"
-    ),
     val isLoading: Boolean = false,
     val errorMessage: String? = null
 )
@@ -37,7 +33,8 @@ class SettingsViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     init {
-        loadSettings()
+        // 설정 화면에 진입할 때만 현재 설정을 로드
+        loadCurrentSettings()
     }
 
     fun updateThemeMode(themeMode: ThemeMode) {
@@ -46,7 +43,7 @@ class SettingsViewModel @Inject constructor(
                 settingsRepository.updateThemeMode(themeMode)
                 _uiState.update { it.copy(themeMode = themeMode) }
             } catch (e: Exception) {
-                _uiState.update { 
+                _uiState.update {
                     it.copy(errorMessage = "테마 변경 실패: ${e.message}")
                 }
             }
@@ -59,21 +56,8 @@ class SettingsViewModel @Inject constructor(
                 settingsRepository.updateLanguage(languageCode)
                 _uiState.update { it.copy(languageCode = languageCode) }
             } catch (e: Exception) {
-                _uiState.update { 
+                _uiState.update {
                     it.copy(errorMessage = "언어 변경 실패: ${e.message}")
-                }
-            }
-        }
-    }
-
-    fun updateColorTheme(colorTheme: ColorTheme) {
-        viewModelScope.launch {
-            try {
-                settingsRepository.updateColorTheme(colorTheme)
-                _uiState.update { it.copy(colorTheme = colorTheme) }
-            } catch (e: Exception) {
-                _uiState.update { 
-                    it.copy(errorMessage = "컬러 테마 변경 실패: ${e.message}")
                 }
             }
         }
@@ -85,101 +69,33 @@ class SettingsViewModel @Inject constructor(
                 settingsRepository.updateFontFamily(fontFamily)
                 _uiState.update { it.copy(fontFamily = fontFamily) }
             } catch (e: Exception) {
-                _uiState.update { 
+                _uiState.update {
                     it.copy(errorMessage = "폰트 변경 실패: ${e.message}")
                 }
             }
         }
     }
 
-    fun updateTextAlign(textAlign: SimpleTextAlign) {
-        viewModelScope.launch {
-            try {
-                settingsRepository.updateTextAlign(textAlign)
-                _uiState.update { it.copy(textAlign = textAlign) }
-            } catch (e: Exception) {
-                _uiState.update { 
-                    it.copy(errorMessage = "텍스트 정렬 변경 실패: ${e.message}")
-                }
-            }
-        }
-    }
-
-    fun updateAiPersonality(aiPersonality: AiPersonality) {
-        viewModelScope.launch {
-            try {
-                settingsRepository.updateAiPersonality(aiPersonality)
-                _uiState.update { it.copy(aiPersonality = aiPersonality) }
-            } catch (e: Exception) {
-                _uiState.update { 
-                    it.copy(errorMessage = "AI 성격 변경 실패: ${e.message}")
-                }
-            }
-        }
-    }
-
-    fun updateNotificationEnabled(enabled: Boolean) {
-        viewModelScope.launch {
-            try {
-                settingsRepository.updateNotificationEnabled(enabled)
-                _uiState.update { it.copy(hasNotificationEnabled = enabled) }
-            } catch (e: Exception) {
-                _uiState.update { 
-                    it.copy(errorMessage = "알림 설정 변경 실패: ${e.message}")
-                }
-            }
-        }
-    }
-
-    fun updateAutoSyncEnabled(enabled: Boolean) {
-        viewModelScope.launch {
-            try {
-                settingsRepository.updateAutoSyncEnabled(enabled)
-                _uiState.update { it.copy(hasAutoSyncEnabled = enabled) }
-            } catch (e: Exception) {
-                _uiState.update { 
-                    it.copy(errorMessage = "자동 동기화 설정 변경 실패: ${e.message}")
-                }
-            }
-        }
-    }
-
-    fun clearError() {
-        _uiState.update { it.copy(errorMessage = null) }
-    }
-
-    private fun loadSettings() {
+    private fun loadCurrentSettings() {
         viewModelScope.launch {
             try {
                 _uiState.update { it.copy(isLoading = true) }
-                
-                val themeMode = settingsRepository.getThemeMode()
-                val languageCode = settingsRepository.getLanguageCode()
-                val colorTheme = settingsRepository.getColorTheme()
-                val fontFamily = settingsRepository.getFontFamily()
-                val textAlign = settingsRepository.getTextAlign()
-                val aiPersonality = settingsRepository.getAiPersonality()
-                val hasNotificationEnabled = settingsRepository.getHasNotificationEnabled()
-                val hasAutoSyncEnabled = settingsRepository.getHasAutoSyncEnabled()
-                val appInfo = settingsRepository.getAppInfo()
+
+                val themeMode = settingsRepository.getThemeMode().first()
+                val languageCode = settingsRepository.getLanguageCode().first()
+                val fontFamily = settingsRepository.getFontFamily().first()
 
                 _uiState.update {
                     it.copy(
                         themeMode = themeMode,
                         languageCode = languageCode,
-                        colorTheme = colorTheme,
                         fontFamily = fontFamily,
-                        textAlign = textAlign,
-                        aiPersonality = aiPersonality,
-                        hasNotificationEnabled = hasNotificationEnabled,
-                        hasAutoSyncEnabled = hasAutoSyncEnabled,
-                        appInfo = appInfo,
                         isLoading = false,
                         errorMessage = null
                     )
                 }
             } catch (e: Exception) {
-                _uiState.update { 
+                _uiState.update {
                     it.copy(
                         isLoading = false,
                         errorMessage = "설정 로드 실패: ${e.message}"

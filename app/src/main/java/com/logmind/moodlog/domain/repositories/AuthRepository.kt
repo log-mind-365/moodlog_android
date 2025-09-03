@@ -6,9 +6,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
     val userChanges: Flow<FirebaseUser?>
-    
+
     val isAuthenticated: Boolean
-    
+
     val isAnonymousUser: Boolean
 
     suspend fun getCurrentUser(): Result<FirebaseUser?>
@@ -19,6 +19,7 @@ interface AuthRepository {
 
     suspend fun signInWithGoogle(): Result<FirebaseUser?>
 
+    suspend fun signInWithGoogleCredential(idToken: String): Result<FirebaseUser?>
     suspend fun linkWithCredential(): Result<FirebaseUser?>
 
     suspend fun signOut()

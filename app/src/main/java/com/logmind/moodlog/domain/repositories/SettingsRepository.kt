@@ -1,22 +1,28 @@
 package com.logmind.moodlog.domain.repositories
 
-import com.logmind.moodlog.domain.entities.*
+import com.logmind.moodlog.domain.entities.AiPersonality
+import com.logmind.moodlog.domain.entities.AppInfo
+import com.logmind.moodlog.domain.entities.ColorTheme
+import com.logmind.moodlog.domain.entities.FontFamily
+import com.logmind.moodlog.domain.entities.LanguageCode
+import com.logmind.moodlog.domain.entities.LoginType
+import com.logmind.moodlog.domain.entities.SimpleTextAlign
+import com.logmind.moodlog.domain.entities.ThemeMode
+import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
 
 interface SettingsRepository {
-    suspend fun getThemeMode(): ThemeMode
+    fun getThemeMode(): Flow<ThemeMode>
 
-    suspend fun getLanguageCode(): LanguageCode
+    fun getLanguageCode(): Flow<LanguageCode>
+
+    fun getFontFamily(): Flow<FontFamily>
 
     suspend fun getAiPersonality(): AiPersonality
 
     suspend fun getHasNotificationEnabled(): Boolean
 
     suspend fun getHasAutoSyncEnabled(): Boolean
-
-    suspend fun getColorTheme(): ColorTheme
-
-    suspend fun getFontFamily(): FontFamily
 
     suspend fun getTextAlign(): SimpleTextAlign
 

@@ -12,12 +12,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MdlAvatar() {
+fun MdlAvatar(onClick: () -> Unit) {
     Box(
         modifier = Modifier.size(48.dp),
         contentAlignment = Alignment.Center
     ) {
-        IconButton(onClick = { /*TODO*/ }) {
+        IconButton(onClick = onClick) {
             Icon(imageVector = Icons.Default.Person, contentDescription = null)
         }
     }

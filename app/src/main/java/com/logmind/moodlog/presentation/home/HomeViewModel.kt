@@ -9,9 +9,18 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
+
+data class HomeUiState(
+    val selectedDateJournals: List<Journal> = emptyList(),
+    val monthlyJournals: Map<LocalDateTime, List<Journal>> = emptyMap(),
+    val representativeMood: MoodType? = null,
+    val isLoading: Boolean = false,
+    val error: String? = null
+)
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -36,20 +45,26 @@ class HomeViewModel @Inject constructor(
 
     private fun loadJournalsByDate() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
-            
-            journalRepository.getJournalsByDate(_selectedDate.value).onSuccess { journals ->
-                _uiState.value = _uiState.value.copy(
-                    selectedDateJournals = journals,
-                    isLoading = false
-                )
-            }.onError { error ->
-                _uiState.value = _uiState.value.copy(
-                    selectedDateJournals = emptyList(),
-                    isLoading = false,
-                    error = error.message
-                )
-            }
+            _uiState.update { it.copy(isLoading = true) }
+
+            journalRepository.getJournalsByDate(_selectedDate.value)
+                .onSuccess { journals ->
+                    _uiState.update {
+                        it.copy(
+                            selectedDateJournals = journals,
+                            isLoading = false
+                        )
+                    }
+                }
+                .onError { error ->
+                    _uiState.update {
+                        it.copy(
+                            selectedDateJournals = emptyList(),
+                            isLoading = false,
+                            error = error.message
+                        )
+                    }
+                }
         }
     }
 
@@ -78,11 +93,3 @@ class HomeViewModel @Inject constructor(
         }
     }
 }
-
-data class HomeUiState(
-    val selectedDateJournals: List<Journal> = emptyList(),
-    val monthlyJournals: Map<LocalDateTime, List<Journal>> = emptyMap(),
-    val representativeMood: MoodType? = null,
-    val isLoading: Boolean = false,
-    val error: String? = null
-)

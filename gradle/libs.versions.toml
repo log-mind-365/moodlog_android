@@ -19,7 +19,9 @@ coil = "3.3.0"
 room = "2.7.2"
 firebase = "34.2.0"
 googleServices = "4.4.3"
+googleSignIn = "21.4.0"
 uiTextGoogleFonts = "1.9.0"
+appcompat = "1.7.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -68,7 +70,12 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 
 # Firebase
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase" }
+
+# Google Sign-In
+google-signin = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "googleSignIn" }
+
 androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

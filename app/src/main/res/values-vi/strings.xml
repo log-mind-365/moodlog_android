@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">moodlog</string>
+    
+    <!-- Navigation -->
+    <string name="nav_home">Trang chủ</string>
+    <string name="nav_write">Viết</string>
+    <string name="nav_statistics">Thống kê</string>
+    <string name="nav_settings">Cài đặt</string>
+    
+    <!-- Home Screen -->
+    <string name="home_title">Cảm xúc hôm nay</string>
+    <string name="home_no_entries">Chưa có bản ghi nào</string>
+    <string name="home_start_journaling">Hãy thử viết nhật ký</string>
+    <string name="home_today">Hôm nay</string>
+    <string name="home_entries_count">%1$d bản ghi</string>
+</resources>
