@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.logmind.moodlog.R
@@ -49,24 +50,34 @@ fun SettingsScreen(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_l))
         ) {
             item {
-                ThemeSection(
-                    currentTheme = uiState.themeMode,
-                    onThemeChange = viewModel::updateThemeMode
-                )
-            }
+                com.logmind.moodlog.presentation.settings.components.SectionCard(
+                    title = "기본 설정"
+                ) {
+                    ThemeSection(
+                        currentTheme = uiState.themeMode,
+                        onThemeChange = viewModel::updateThemeMode
+                    )
 
-            item {
-                LanguageSection(
-                    currentLanguage = uiState.languageCode,
-                    onLanguageChange = viewModel::updateLanguage
-                )
-            }
+                    androidx.compose.material3.HorizontalDivider(
+                        modifier = androidx.compose.ui.Modifier.padding(vertical = 8.dp),
+                        color = androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant
+                    )
 
-            item {
-                FontSection(
-                    currentFont = uiState.fontFamily,
-                    onFontChange = viewModel::updateFontFamily
-                )
+                    LanguageSection(
+                        currentLanguage = uiState.languageCode,
+                        onLanguageChange = viewModel::updateLanguage
+                    )
+
+                    androidx.compose.material3.HorizontalDivider(
+                        modifier = androidx.compose.ui.Modifier.padding(vertical = 8.dp),
+                        color = androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant
+                    )
+
+                    FontSection(
+                        currentFont = uiState.fontFamily,
+                        onFontChange = viewModel::updateFontFamily
+                    )
+                }
             }
         }
     }
