@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.logmind.moodlog.R
@@ -29,7 +30,6 @@ import com.logmind.moodlog.navigation.Screen
 @Composable
 fun MdlScaffold(
     navController: NavHostController,
-    topBar: @Composable () -> Unit,
     content: @Composable () -> Unit
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -51,7 +51,36 @@ fun MdlScaffold(
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
-        topBar = topBar,
+        topBar = {
+            when (currentScreen) {
+                is Screen.Home -> MdlTopAppBar(
+                    title = stringResource(R.string.app_name),
+                    actions = {
+                        MdlAvatar(onClick = {
+                            navController.navigate(Screen.Profile.route)
+                        })
+                    }
+                )
+
+                is Screen.Statistics -> MdlTopAppBar(
+                    title = stringResource(R.string.nav_statistics)
+                )
+
+                is Screen.Settings -> MdlTopAppBar(
+                    title = stringResource(R.string.nav_settings)
+                )
+
+                is Screen.Write -> MdlTopAppBar(
+                    navigationIcon = {
+                        MdlBackButton(onClick = { navController.popBackStack() })
+                    }
+                )
+
+                else -> MdlTopAppBar(
+                    title = stringResource(R.string.app_name)
+                )
+            }
+        },
         bottomBar = {
             MoodLogBottomNavigation(
                 currentScreen = currentScreen,
