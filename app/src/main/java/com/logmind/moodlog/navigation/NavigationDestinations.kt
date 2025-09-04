@@ -19,6 +19,12 @@ sealed interface Screen {
     }
 
     @Serializable
+    data object Entries : Screen {
+        override val route = "entries"
+        override val labelResId = R.string.nav_entries
+    }
+
+    @Serializable
     data object Write : Screen {
         override val route = "write"
         override val labelResId = R.string.nav_write
@@ -61,6 +67,7 @@ sealed interface Screen {
                 Statistics.route -> Statistics
                 Settings.route -> Settings
                 Profile.route -> Profile
+                Entries.route -> Entries
                 Auth.route -> Auth
                 else -> Home // Default to Home instead of Auth
             }

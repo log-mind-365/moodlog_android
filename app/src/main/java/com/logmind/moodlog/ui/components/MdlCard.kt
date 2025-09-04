@@ -15,16 +15,41 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun MdlCard(
     modifier: Modifier = Modifier,
-    shape: Shape = CardDefaults.shape,
+    shape: Shape = MaterialTheme.shapes.large,
     containerColor: Color = MaterialTheme.colorScheme.background,
     contentColor: Color = MaterialTheme.colorScheme.onBackground,
     elevation: CardElevation = CardDefaults.cardElevation(),
     border: BorderStroke? = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceContainerHigh),
-    onClick: (() -> Unit)? = null,
+    onClick: () -> Unit,
     content: @Composable () -> Unit
 ) {
     Card(
-        onClick = onClick ?: {},
+        onClick = onClick,
+        modifier = modifier
+            .fillMaxWidth(),
+        shape = shape,
+        border = border,
+        colors = CardDefaults.cardColors(
+            containerColor = containerColor,
+            contentColor = contentColor
+        ),
+        elevation = elevation,
+    ) {
+        content()
+    }
+}
+
+@Composable
+fun MdlCard(
+    modifier: Modifier = Modifier,
+    shape: Shape = MaterialTheme.shapes.large,
+    containerColor: Color = MaterialTheme.colorScheme.background,
+    contentColor: Color = MaterialTheme.colorScheme.onBackground,
+    elevation: CardElevation = CardDefaults.cardElevation(),
+    border: BorderStroke? = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceContainerHigh),
+    content: @Composable () -> Unit
+) {
+    Card(
         modifier = modifier
             .fillMaxWidth(),
         shape = shape,

@@ -121,7 +121,7 @@ fun ModernMonthlyCalendar(
                 }
             }
 
-            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.spacing_l)))
+            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.spacing_lg)))
 
             // Calendar grid
             LazyVerticalGrid(

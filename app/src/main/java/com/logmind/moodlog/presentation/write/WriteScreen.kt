@@ -112,7 +112,7 @@ private fun MoodSlider(
     MdlCard {
         Column(
             modifier = Modifier.padding(dimensionResource(R.dimen.card_padding)),
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_l))
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_lg))
         ) {
             Text(
                 text = stringResource(R.string.write_mood_question),
@@ -187,7 +187,7 @@ private fun ContentInput(
     MdlCard {
         Column(
             modifier = Modifier.padding(dimensionResource(R.dimen.card_padding)),
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_m))
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_md))
         ) {
             Text(
                 text = stringResource(R.string.write_content_question),
@@ -216,7 +216,7 @@ private fun ModernImageSection(
     MdlCard {
         Column(
             modifier = Modifier.padding(dimensionResource(R.dimen.card_padding)),
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_m))
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_md))
         ) {
             Text(
                 text = stringResource(R.string.write_add_image),

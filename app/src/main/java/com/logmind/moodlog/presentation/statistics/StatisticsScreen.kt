@@ -59,7 +59,7 @@ fun StatisticsScreen(
             ) { CircularProgressIndicator() }
         }
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_l)),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_lg)),
             modifier = Modifier.fillMaxWidth()
         ) {
             item {

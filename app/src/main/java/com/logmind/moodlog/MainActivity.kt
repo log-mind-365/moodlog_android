@@ -35,7 +35,6 @@ class MainActivity : ComponentActivity() {
 
             MoodLogTheme(
                 themeMode = uiState.themeMode,
-                fontFamily = uiState.fontFamily
             ) {
                 MoodLogNavigation()
             }

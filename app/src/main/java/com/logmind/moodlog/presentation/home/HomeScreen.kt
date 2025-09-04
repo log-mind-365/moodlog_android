@@ -28,7 +28,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.logmind.moodlog.R
 import com.logmind.moodlog.presentation.home.components.JournalCard
 import com.logmind.moodlog.presentation.home.components.ModernDateHeader
-import com.logmind.moodlog.presentation.home.components.ModernMonthlyCalendar
 import com.logmind.moodlog.ui.components.MdlCard
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,15 +42,13 @@ fun HomeScreen(
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        ModernDateHeader(selectedDate = selectedDate)
-        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.spacing_l)))
-        ModernMonthlyCalendar(
+        ModernDateHeader(
             selectedDate = selectedDate,
             monthlyJournals = uiState.monthlyJournals,
             onDateSelected = viewModel::selectDate
         )
-        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.spacing_l)))
-        // Today's Journals
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.spacing_lg)))
+      
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -65,7 +62,6 @@ fun HomeScreen(
             )
         }
         Spacer(modifier = Modifier.height(12.dp))
-        // Journal List
         if (uiState.isLoading) {
             Box(
                 modifier = Modifier.fillMaxWidth(),

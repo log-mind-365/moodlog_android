@@ -2,7 +2,6 @@ package com.logmind.moodlog
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.logmind.moodlog.domain.entities.FontFamily
 import com.logmind.moodlog.domain.entities.LanguageCode
 import com.logmind.moodlog.domain.entities.ThemeMode
 import com.logmind.moodlog.domain.repositories.SettingsRepository
@@ -16,7 +15,6 @@ import javax.inject.Inject
 data class MainAppState(
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val languageCode: LanguageCode = LanguageCode.EN,
-    val fontFamily: FontFamily = FontFamily.PRETENDARD
 )
 
 @HiltViewModel
@@ -32,7 +30,6 @@ class MainActivityViewModel @Inject constructor(
         MainAppState(
             themeMode = themeMode,
             languageCode = languageCode,
-            fontFamily = fontFamily
         )
     }.stateIn(
         scope = viewModelScope,

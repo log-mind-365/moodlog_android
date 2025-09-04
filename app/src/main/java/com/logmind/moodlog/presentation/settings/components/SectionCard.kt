@@ -34,7 +34,7 @@ fun SectionCard(
             color = MaterialTheme.colorScheme.outline
         )
     }
-    Spacer(Modifier.height(dimensionResource(R.dimen.spacing_l)))
+    Spacer(Modifier.height(dimensionResource(R.dimen.spacing_lg)))
     MdlCard(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp)

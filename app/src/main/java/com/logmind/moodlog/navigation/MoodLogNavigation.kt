@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.logmind.moodlog.presentation.auth.AuthScreen
 import com.logmind.moodlog.presentation.auth.AuthViewModel
+import com.logmind.moodlog.presentation.entries.EntriesScreen
 import com.logmind.moodlog.presentation.home.HomeScreen
 import com.logmind.moodlog.presentation.profile.ProfileScreen
 import com.logmind.moodlog.presentation.settings.SettingsScreen
@@ -49,6 +50,9 @@ fun MoodLogNavigation(
                 }
                 composable(Screen.Home.route) {
                     HomeScreen()
+                }
+                composable(Screen.Entries.route) {
+                    EntriesScreen()
                 }
 
                 composable(Screen.Write.route) {
