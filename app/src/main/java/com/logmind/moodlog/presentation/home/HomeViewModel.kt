@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.logmind.moodlog.domain.entities.Journal
 import com.logmind.moodlog.domain.entities.MoodType
-import com.logmind.moodlog.domain.repositories.JournalRepository
+import com.logmind.moodlog.domain.usecases.JournalUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,7 +24,7 @@ data class HomeUiState(
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val journalRepository: JournalRepository
+    private val journalUseCase: JournalUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -47,7 +47,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
 
-            journalRepository.getJournalsByDate(_selectedDate.value)
+            journalUseCase.getJournalsByDate(_selectedDate.value)
                 .onSuccess { journals ->
                     _uiState.update {
                         it.copy(
@@ -56,7 +56,7 @@ class HomeViewModel @Inject constructor(
                         )
                     }
                 }
-                .onError { error ->
+                .onFailure { error ->
                     _uiState.update {
                         it.copy(
                             selectedDateJournals = emptyList(),
@@ -70,26 +70,29 @@ class HomeViewModel @Inject constructor(
 
     private fun loadMonthlyJournals() {
         viewModelScope.launch {
-            journalRepository.getJournalsByMonth(_selectedDate.value).onSuccess { journals ->
-                val monthlyMap = journals.groupBy { journal ->
-                    LocalDateTime.of(
-                        journal.createdAt.year,
-                        journal.createdAt.month,
-                        journal.createdAt.dayOfMonth,
-                        0, 0
-                    )
+            journalUseCase.getJournalsByMonth(_selectedDate.value)
+                .onSuccess { journals ->
+                    val monthlyMap = journals.groupBy { journal ->
+                        LocalDateTime.of(
+                            journal.createdAt.year,
+                            journal.createdAt.month,
+                            journal.createdAt.dayOfMonth,
+                            0, 0
+                        )
+                    }
+                    _uiState.update { it.copy(monthlyJournals = monthlyMap) }
                 }
-                _uiState.value = _uiState.value.copy(monthlyJournals = monthlyMap)
-            }
+
         }
     }
 
     fun deleteJournal(journalId: Int) {
         viewModelScope.launch {
-            journalRepository.deleteJournalById(journalId).onSuccess {
-                loadJournalsByDate()
-                loadMonthlyJournals()
-            }
+            journalUseCase.deleteJournalById(journalId)
+                .onSuccess {
+                    loadJournalsByDate()
+                    loadMonthlyJournals()
+                }
         }
     }
 }

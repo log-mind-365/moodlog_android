@@ -28,12 +28,10 @@ data class SettingsUiState(
 class SettingsViewModel @Inject constructor(
     private val settingsRepository: SettingsRepository
 ) : ViewModel() {
-
     private val _uiState = MutableStateFlow(SettingsUiState())
     val uiState = _uiState.asStateFlow()
 
     init {
-        // 설정 화면에 진입할 때만 현재 설정을 로드
         loadCurrentSettings()
     }
 
@@ -41,7 +39,9 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 settingsRepository.updateThemeMode(themeMode)
-                _uiState.update { it.copy(themeMode = themeMode) }
+                _uiState.update {
+                    it.copy(themeMode = themeMode)
+                }
             } catch (e: Exception) {
                 _uiState.update {
                     it.copy(errorMessage = "테마 변경 실패: ${e.message}")
@@ -54,7 +54,9 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 settingsRepository.updateLanguage(languageCode)
-                _uiState.update { it.copy(languageCode = languageCode) }
+                _uiState.update {
+                    it.copy(languageCode = languageCode)
+                }
             } catch (e: Exception) {
                 _uiState.update {
                     it.copy(errorMessage = "언어 변경 실패: ${e.message}")
@@ -67,7 +69,9 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 settingsRepository.updateFontFamily(fontFamily)
-                _uiState.update { it.copy(fontFamily = fontFamily) }
+                _uiState.update {
+                    it.copy(fontFamily = fontFamily)
+                }
             } catch (e: Exception) {
                 _uiState.update {
                     it.copy(errorMessage = "폰트 변경 실패: ${e.message}")
@@ -79,8 +83,9 @@ class SettingsViewModel @Inject constructor(
     private fun loadCurrentSettings() {
         viewModelScope.launch {
             try {
-                _uiState.update { it.copy(isLoading = true) }
-
+                _uiState.update {
+                    it.copy(isLoading = true)
+                }
                 val themeMode = settingsRepository.getThemeMode().first()
                 val languageCode = settingsRepository.getLanguageCode().first()
                 val fontFamily = settingsRepository.getFontFamily().first()

@@ -1,6 +1,5 @@
 package com.logmind.moodlog.domain.usecases
 
-import com.logmind.moodlog.domain.common.Result
 import com.logmind.moodlog.domain.entities.CreateJournalDto
 import com.logmind.moodlog.domain.entities.Journal
 import com.logmind.moodlog.domain.entities.UpdateJournalDto
@@ -12,18 +11,37 @@ class JournalUseCase @Inject constructor(
     private val journalRepository: JournalRepository
 ) {
     suspend fun addJournal(dto: CreateJournalDto): Result<Map<String, Any>> {
-        return journalRepository.addJournal(dto)
+        return runCatching { journalRepository.addJournal(dto) }
     }
 
-    suspend fun deleteJournal(id: Int): Result<Unit> {
-        return journalRepository.deleteJournalById(id)
+    suspend fun getJournals(): Result<List<Journal>> {
+        return runCatching { journalRepository.getAllJournals() }
+    }
+
+    suspend fun getJournalById(id: Int): Result<Journal> {
+        return runCatching { journalRepository.getJournalById(id) }
+    }
+
+    suspend fun getJournalsByMonth(date: LocalDateTime): Result<List<Journal>> {
+        return runCatching { journalRepository.getJournalsByMonth(date) }
+    }
+
+    suspend fun getJournalsByDate(date: LocalDateTime): Result<List<Journal>> {
+        return runCatching { journalRepository.getJournalsByDate(date) }
+    }
+
+    suspend fun deleteJournalById(id: Int): Result<Unit> {
+        return runCatching { journalRepository.deleteJournalById(id) }
     }
 
     suspend fun updateJournal(dto: UpdateJournalDto): Result<Int> {
-        return journalRepository.updateJournal(dto)
+        return runCatching { journalRepository.updateJournal(dto) }
     }
 
-    suspend fun getJournalsByDateRange(startDate: LocalDateTime, endDate: LocalDateTime): Result<List<Journal>> {
-        return journalRepository.getJournalsByDateRange(startDate, endDate)
+    suspend fun getJournalsByDateRange(
+        startDate: LocalDateTime,
+        endDate: LocalDateTime
+    ): Result<List<Journal>> {
+        return runCatching { journalRepository.getJournalsByDateRange(startDate, endDate) }
     }
 }

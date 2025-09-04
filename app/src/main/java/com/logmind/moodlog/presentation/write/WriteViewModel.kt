@@ -3,12 +3,15 @@ package com.logmind.moodlog.presentation.write
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.logmind.moodlog.domain.common.Result
-import com.logmind.moodlog.domain.entities.*
+import com.logmind.moodlog.domain.entities.CreateJournalDto
+import com.logmind.moodlog.domain.entities.MoodType
+import com.logmind.moodlog.domain.entities.Tag
 import com.logmind.moodlog.domain.usecases.JournalUseCase
 import com.logmind.moodlog.domain.usecases.TagUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -30,7 +33,6 @@ class WriteViewModel @Inject constructor(
     private val journalUseCase: JournalUseCase,
     private val tagUseCase: TagUseCase
 ) : ViewModel() {
-
     private val _uiState = MutableStateFlow(WriteUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -40,35 +42,35 @@ class WriteViewModel @Inject constructor(
     }
 
     fun updateMood(moodType: MoodType) {
-        _uiState.update { 
+        _uiState.update {
             it.copy(selectedMood = moodType)
         }
         updateCanSave()
     }
 
     fun updateContent(content: String) {
-        _uiState.update { 
+        _uiState.update {
             it.copy(content = content)
         }
         updateCanSave()
     }
 
     fun updateImages(images: List<Uri>) {
-        _uiState.update { 
+        _uiState.update {
             it.copy(imageUris = images)
         }
         updateCanSave()
     }
 
     fun addImage(uri: Uri) {
-        _uiState.update { 
+        _uiState.update {
             it.copy(imageUris = it.imageUris + uri)
         }
         updateCanSave()
     }
 
     fun removeImage(uri: Uri) {
-        _uiState.update { 
+        _uiState.update {
             it.copy(imageUris = it.imageUris - uri)
         }
         updateCanSave()
@@ -87,37 +89,36 @@ class WriteViewModel @Inject constructor(
 
     fun createNewTag(tagName: String) {
         if (tagName.isBlank()) return
-        
+
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            
-            when (val result = tagUseCase.addTag(tagName, null)) {
-                is Result.Success -> {
+
+            tagUseCase.addTag(tagName, null)
+                .onSuccess {
                     loadTags()
-                    _uiState.update { 
+                    _uiState.update {
                         it.copy(
                             isLoading = false,
                             errorMessage = null
                         )
                     }
                 }
-                is Result.Error -> {
-                    _uiState.update { 
+                .onFailure { error ->
+                    _uiState.update {
                         it.copy(
                             isLoading = false,
-                            errorMessage = result.exception.message
+                            errorMessage = error.message
                         )
                     }
                 }
-            }
         }
     }
 
     fun saveJournal() {
         val currentState = _uiState.value
-        
+
         if (!isValidForSaving(currentState)) {
-            _uiState.update { 
+            _uiState.update {
                 it.copy(errorMessage = "내용을 입력해주세요.")
             }
             return
@@ -125,7 +126,7 @@ class WriteViewModel @Inject constructor(
 
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            
+
             val dto = CreateJournalDto(
                 content = currentState.content.takeIf { it.isNotBlank() },
                 moodType = currentState.selectedMood,
@@ -141,17 +142,17 @@ class WriteViewModel @Inject constructor(
                 weatherDescription = null
             )
 
-            when (val result = journalUseCase.addJournal(dto)) {
-                is Result.Success -> {
-                    val journalId = (result.data["journalId"] as? Number)?.toInt()
-                    
+            journalUseCase.addJournal(dto)
+                .onSuccess { journal ->
+                    val journalId = (journal["journalId"] as? Number)?.toInt()
+
                     if (journalId != null && currentState.selectedTags.isNotEmpty()) {
-                        when (val tagResult = tagUseCase.updateJournalTags(
+                        tagUseCase.updateJournalTags(
                             journalId = journalId,
                             tagIds = currentState.selectedTags.toList()
-                        )) {
-                            is Result.Success -> {
-                                _uiState.update { 
+                        )
+                            .onSuccess {
+                                _uiState.update {
                                     it.copy(
                                         isLoading = false,
                                         errorMessage = null,
@@ -159,17 +160,16 @@ class WriteViewModel @Inject constructor(
                                     )
                                 }
                             }
-                            is Result.Error -> {
-                                _uiState.update { 
+                            .onFailure { error ->
+                                _uiState.update {
                                     it.copy(
                                         isLoading = false,
-                                        errorMessage = "일기는 저장되었으나 태그 연결에 실패했습니다: ${tagResult.exception.message}"
+                                        errorMessage = "일기는 저장되었으나 태그 연결에 실패했습니다: ${error.message}"
                                     )
                                 }
                             }
-                        }
                     } else {
-                        _uiState.update { 
+                        _uiState.update {
                             it.copy(
                                 isLoading = false,
                                 errorMessage = null,
@@ -178,15 +178,14 @@ class WriteViewModel @Inject constructor(
                         }
                     }
                 }
-                is Result.Error -> {
-                    _uiState.update { 
+                .onFailure { error ->
+                    _uiState.update {
                         it.copy(
                             isLoading = false,
-                            errorMessage = result.exception.message
+                            errorMessage = error.message
                         )
                     }
                 }
-            }
         }
     }
 
@@ -196,25 +195,23 @@ class WriteViewModel @Inject constructor(
 
     private fun loadTags() {
         viewModelScope.launch {
-            when (val result = tagUseCase.getAllTags()) {
-                is Result.Success -> {
-                    _uiState.update { 
-                        it.copy(availableTags = result.data)
+            tagUseCase.getAllTags()
+                .onSuccess { result ->
+                    _uiState.update {
+                        it.copy(availableTags = it.availableTags + result)
                     }
                 }
-                is Result.Error -> {
-                    _uiState.update { 
-                        it.copy(errorMessage = result.exception.message)
+                .onFailure { error ->
+                    _uiState.update {
+                        it.copy(errorMessage = error.message)
                     }
                 }
-            }
         }
     }
 
-
     private fun updateCanSave() {
         val currentState = _uiState.value
-        _uiState.update { 
+        _uiState.update {
             it.copy(canSave = isValidForSaving(currentState))
         }
     }

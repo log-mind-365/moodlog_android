@@ -1,15 +1,23 @@
 package com.logmind.moodlog.domain.usecases
 
 import com.google.firebase.auth.FirebaseUser
-import com.logmind.moodlog.domain.common.Result
 import com.logmind.moodlog.domain.repositories.AuthRepository
 import javax.inject.Inject
 
 class AuthUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
+
     suspend fun signInWithGoogle(): Result<FirebaseUser?> {
-        return authRepository.signInWithGoogle()
+        return runCatching { authRepository.signInWithGoogle() }
+    }
+
+    suspend fun signInAnonymously(): Result<FirebaseUser?> {
+        return runCatching { authRepository.signInAnonymously() }
+    }
+
+    suspend fun signInWithGoogleCredential(idToken: String): Result<FirebaseUser?> {
+        return runCatching { authRepository.signInWithGoogleCredential(idToken) }
     }
 
     suspend fun signOut() {
@@ -17,10 +25,10 @@ class AuthUseCase @Inject constructor(
     }
 
     suspend fun updateDisplayName(displayName: String): Result<Unit> {
-        return authRepository.updateDisplayName(displayName)
+        return runCatching { authRepository.updateDisplayName(displayName) }
     }
 
     suspend fun updateProfileImage(photoURL: String): Result<Unit> {
-        return authRepository.updateProfileImage(photoURL)
+        return runCatching { authRepository.updateProfileImage(photoURL) }
     }
 }

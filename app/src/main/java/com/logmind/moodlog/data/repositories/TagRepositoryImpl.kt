@@ -4,9 +4,9 @@ import com.logmind.moodlog.data.database.dao.JournalDao
 import com.logmind.moodlog.data.database.dao.TagDao
 import com.logmind.moodlog.data.mappers.createTagEntity
 import com.logmind.moodlog.data.mappers.toDomainModel
-import com.logmind.moodlog.domain.common.Result
 import com.logmind.moodlog.domain.entities.Tag
 import com.logmind.moodlog.domain.repositories.TagRepository
+import com.logmind.moodlog.utils.execute
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -16,90 +16,67 @@ class TagRepositoryImpl @Inject constructor(
     private val journalDao: JournalDao
 ) : TagRepository {
 
-    override suspend fun getAllTags(): Result<List<Tag>> {
-        return try {
-            val tags = tagDao.getAllTags().map { it.toDomainModel() }
-            Result.success(tags)
-        } catch (e: Throwable) {
-            Result.error(e)
+    override suspend fun getAllTags(): List<Tag> {
+        return execute("getAllTags") {
+            tagDao.getAllTags().map { it.toDomainModel() }
         }
     }
 
-    override suspend fun getTagById(id: Int): Result<Tag?> {
-        return try {
-            val tag = tagDao.getTagById(id)?.toDomainModel()
-            Result.success(tag)
-        } catch (e: Throwable) {
-            Result.error(e)
+    override suspend fun getTagById(id: Int): Tag? {
+        return execute("getTagById") {
+            tagDao.getTagById(id)?.toDomainModel()
+                ?: throw NoSuchElementException("Tag with id $id not found")
+        }
+
+    }
+
+    override suspend fun getTagsByJournalId(journalId: Int): List<Tag> {
+        return execute("getTagsByJournalId") {
+            tagDao.getTagsByJournalId(journalId).map { it.toDomainModel() }
         }
     }
 
-    override suspend fun getTagsByJournalId(journalId: Int): Result<List<Tag>> {
-        return try {
-            val tags = tagDao.getTagsByJournalId(journalId).map { it.toDomainModel() }
-            Result.success(tags)
-        } catch (e: Throwable) {
-            Result.error(e)
-        }
-    }
-
-    override suspend fun addTag(name: String, color: String?): Result<Int> {
-        return try {
+    override suspend fun addTag(name: String, color: String?): Int {
+        return execute("addTag") {
             val entity = createTagEntity(name, color)
-            val tagId = tagDao.insertTag(entity).toInt()
-            Result.success(tagId)
-        } catch (e: Throwable) {
-            Result.error(e)
+            tagDao.insertTag(entity).toInt()
         }
     }
 
-    override suspend fun updateTag(id: Int, name: String, color: String?): Result<Unit> {
-        return try {
+    override suspend fun updateTag(id: Int, name: String, color: String?) {
+        return execute("updateTag") {
             val existingTag = tagDao.getTagById(id)
                 ?: throw NoSuchElementException("Tag with id $id not found")
             val updatedTag = existingTag.copy(name = name, color = color)
             tagDao.updateTag(updatedTag)
-            Result.success(Unit)
-        } catch (e: Throwable) {
-            Result.error(e)
         }
     }
 
-    override suspend fun deleteTag(id: Int): Result<Unit> {
-        return try {
+    override suspend fun deleteTag(id: Int) {
+        return execute("deleteTag") {
             tagDao.deleteTag(id)
-            Result.success(Unit)
-        } catch (e: Throwable) {
-            Result.error(e)
         }
     }
 
-    override suspend fun addTagToJournal(journalId: Int, tagId: Int): Result<Unit> {
-        return try {
+    override suspend fun addTagToJournal(journalId: Int, tagId: Int) {
+        return execute("addTagToJournal") {
             // This should be handled through JournalDao
             // Implementation depends on your database schema
-            Result.success(Unit)
-        } catch (e: Throwable) {
-            Result.error(e)
         }
     }
 
-    override suspend fun removeTagFromJournal(journalId: Int, tagId: Int): Result<Unit> {
-        return try {
+    override suspend fun removeTagFromJournal(journalId: Int, tagId: Int) {
+        return execute("removeTagFromJournal") {
             // This should be handled through JournalDao
             // Implementation depends on your database schema
-            Result.success(Unit)
-        } catch (e: Throwable) {
-            Result.error(e)
         }
     }
 
-    override suspend fun updateJournalTags(journalId: Int, tagIds: List<Int>): Result<Unit> {
-        return try {
+    override suspend fun updateJournalTags(journalId: Int, tagIds: List<Int>) {
+        return execute("updateJournalTags") {
             journalDao.updateJournalTags(journalId, tagIds)
-            Result.success(Unit)
-        } catch (e: Throwable) {
-            Result.error(e)
         }
     }
+
+
 }

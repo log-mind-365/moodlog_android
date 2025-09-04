@@ -1,6 +1,5 @@
 package com.logmind.moodlog.domain.repositories
 
-import com.logmind.moodlog.domain.common.Result
 import com.logmind.moodlog.domain.entities.WeatherCondition
 import com.logmind.moodlog.domain.entities.WeatherInfo
 

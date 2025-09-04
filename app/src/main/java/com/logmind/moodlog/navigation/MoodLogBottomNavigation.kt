@@ -16,14 +16,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavOptionsBuilder
 
 @Composable
 fun MoodLogBottomNavigation(
     navigate: (String, NavOptionsBuilder.() -> Unit) -> Unit,
-    currentRoute: String?,
-    startDestinationId: Int?,
+    currentScreen: Screen,
     showBottomBar: Boolean,
 ) {
     AnimatedVisibility(
@@ -33,10 +33,12 @@ fun MoodLogBottomNavigation(
     ) {
         NavigationBar {
             bottomNavigationItems.forEach { item ->
-                val selected = currentRoute == item.route
+                val selected = currentScreen.route == item.route
 
                 val iconTint by animateColorAsState(
-                    targetValue = if (selected) MaterialTheme.colorScheme.onPrimary else Color.Unspecified,
+                    targetValue = if (selected) {
+                        MaterialTheme.colorScheme.onPrimary
+                    } else Color.Unspecified,
                     animationSpec = tween(
                         durationMillis = 200,
                         easing = FastOutSlowInEasing
@@ -48,21 +50,19 @@ fun MoodLogBottomNavigation(
                     icon = {
                         Icon(
                             imageVector = if (selected) item.selectedIcon else item.unselectedIcon,
-                            contentDescription = item.label,
+                            contentDescription = item.label?.let { stringResource(it) },
                             tint = iconTint,
                             modifier = Modifier
                                 .size(20.dp)
                         )
                     },
-                    label = { Text(item.label) },
+                    label = { item.label?.let { Text(stringResource(it)) } },
                     selected = selected,
                     onClick = {
-                        if (currentRoute != item.route) {
+                        if (currentScreen.route != item.route) {
                             navigate(item.route) {
-                                startDestinationId?.let { destinationId ->
-                                    popUpTo(destinationId) {
-                                        saveState = true
-                                    }
+                                popUpTo(Screen.Home.route) {
+                                    saveState = true
                                 }
                                 launchSingleTop = true
                                 restoreState = true

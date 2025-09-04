@@ -13,7 +13,7 @@ data class BottomNavigationItem(
     val route: String,
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector,
-    val label: String
+    val label: Int?
 )
 
 val bottomNavigationItems = listOf(
@@ -21,18 +21,18 @@ val bottomNavigationItems = listOf(
         route = Screen.Home.route,
         selectedIcon = Icons.Filled.Home,
         unselectedIcon = Icons.Outlined.Home,
-        label = "Home"
+        label = Screen.Home.labelResId
     ),
     BottomNavigationItem(
         route = Screen.Statistics.route,
         selectedIcon = Icons.Filled.Star,
         unselectedIcon = Icons.Outlined.Star,
-        label = "Statistics"
+        label = Screen.Statistics.labelResId
     ),
     BottomNavigationItem(
         route = Screen.Settings.route,
         selectedIcon = Icons.Filled.Settings,
         unselectedIcon = Icons.Outlined.Settings,
-        label = "Settings"
+        label = Screen.Settings.labelResId
     )
 )

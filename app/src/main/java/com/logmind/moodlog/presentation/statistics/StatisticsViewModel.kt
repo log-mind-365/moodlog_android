@@ -2,7 +2,6 @@ package com.logmind.moodlog.presentation.statistics
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.logmind.moodlog.domain.common.Result
 import com.logmind.moodlog.domain.entities.Journal
 import com.logmind.moodlog.domain.entities.MoodType
 import com.logmind.moodlog.domain.usecases.JournalUseCase
@@ -66,54 +65,47 @@ class StatisticsViewModel @Inject constructor(
 
     private fun loadStatistics() {
         viewModelScope.launch {
-            try {
-                _uiState.update { it.copy(isLoading = true, errorMessage = null) }
-
-                val period = _uiState.value.selectedPeriod
-                val startDate = LocalDateTime.now().minusDays(period.days.toLong())
-                val endDate = LocalDateTime.now()
-
-                when (val result = journalUseCase.getJournalsByDateRange(startDate, endDate)) {
-                    is Result.Success -> {
-                        val journals = result.data
-                        val moodTrends = calculateMoodTrends(journals, period)
-                        val moodDistribution = calculateMoodDistribution(journals)
-                        val averageMood = calculateAverageMood(journals)
-                        val streakDays = calculateStreakDays(journals)
-                        val bestMoodDay = findBestMoodDay(journals)
-
-                        _uiState.update {
-                            it.copy(
-                                isLoading = false,
-                                journals = journals,
-                                moodTrends = moodTrends,
-                                moodDistribution = moodDistribution,
-                                averageMood = averageMood,
-                                totalEntries = journals.size,
-                                streakDays = streakDays,
-                                bestMoodDay = bestMoodDay,
-                                errorMessage = null
-                            )
-                        }
-                    }
-
-                    is Result.Error -> {
-                        _uiState.update {
-                            it.copy(
-                                isLoading = false,
-                                errorMessage = result.exception.message
-                            )
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        errorMessage = "통계 계산 중 오류가 발생했습니다: ${e.message}"
-                    )
-                }
+            _uiState.update {
+                it.copy(
+                    isLoading = true,
+                    errorMessage = null
+                )
             }
+
+            val period = _uiState.value.selectedPeriod
+            val startDate = LocalDateTime.now().minusDays(period.days.toLong())
+            val endDate = LocalDateTime.now()
+
+            journalUseCase.getJournalsByDateRange(startDate, endDate)
+                .onSuccess { result ->
+                    val journals = result
+                    val moodTrends = calculateMoodTrends(journals, period)
+                    val moodDistribution = calculateMoodDistribution(journals)
+                    val averageMood = calculateAverageMood(journals)
+                    val streakDays = calculateStreakDays(journals)
+                    val bestMoodDay = findBestMoodDay(journals)
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            journals = journals,
+                            moodTrends = moodTrends,
+                            moodDistribution = moodDistribution,
+                            averageMood = averageMood,
+                            totalEntries = journals.size,
+                            streakDays = streakDays,
+                            bestMoodDay = bestMoodDay,
+                            errorMessage = null
+                        )
+                    }
+                }
+                .onFailure { error ->
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = error.message
+                        )
+                    }
+                }
         }
     }
 

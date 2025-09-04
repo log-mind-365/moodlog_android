@@ -3,7 +3,8 @@ package com.logmind.moodlog.presentation.auth
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
-import com.logmind.moodlog.domain.repositories.AuthRepository
+import com.logmind.moodlog.domain.usecases.AuthUseCase
+import com.logmind.moodlog.domain.usecases.UserChangesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,9 +22,9 @@ data class AuthUiState(
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authUseCase: AuthUseCase,
+    private val userChangesUseCase: UserChangesUseCase
 ) : ViewModel() {
-
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 
@@ -33,21 +34,28 @@ class AuthViewModel @Inject constructor(
 
     private fun observeAuthState() {
         viewModelScope.launch {
-            authRepository.userChanges.collect { user ->
-                _uiState.value = _uiState.value.copy(
-                    user = user,
-                    isSignedIn = user != null,
-                    isLoading = false
-                )
+            userChangesUseCase().collect { user ->
+                _uiState.update {
+                    it.copy(
+                        user = user,
+                        isSignedIn = user != null,
+                        isLoading = false
+                    )
+                }
             }
         }
     }
 
     fun signInAnonymously() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, error = null) }
+            _uiState.update {
+                it.copy(
+                    isLoading = true,
+                    error = null
+                )
+            }
 
-            authRepository.signInAnonymously()
+            authUseCase.signInAnonymously()
                 .onSuccess { result ->
                     _uiState.update {
                         it.copy(
@@ -57,7 +65,7 @@ class AuthViewModel @Inject constructor(
                         )
                     }
                 }
-                .onError { error ->
+                .onFailure { error ->
                     _uiState.update {
                         it.copy(
                             isLoading = false,
@@ -70,29 +78,37 @@ class AuthViewModel @Inject constructor(
 
     fun signInWithGoogle(idToken: String) {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, error = null) }
+            _uiState.update {
+                it.copy(
+                    isLoading = true,
+                    error = null
+                )
+            }
 
-
-            authRepository.signInWithGoogleCredential(idToken)
+            authUseCase.signInWithGoogleCredential(idToken)
                 .onSuccess { result ->
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        user = result,
-                        isSignedIn = true
-                    )
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            user = result,
+                            isSignedIn = true
+                        )
+                    }
                 }
-                .onError { error ->
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        error = error.message
-                    )
+                .onFailure { error ->
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            error = error.message
+                        )
+                    }
                 }
         }
     }
 
     fun signOut() {
         viewModelScope.launch {
-            authRepository.signOut()
+            authUseCase.signOut()
             _uiState.update {
                 it.copy(
                     user = null,
@@ -104,6 +120,8 @@ class AuthViewModel @Inject constructor(
     }
 
     fun clearError() {
-        _uiState.update { it.copy(error = null) }
+        _uiState.update {
+            it.copy(error = null)
+        }
     }
 }

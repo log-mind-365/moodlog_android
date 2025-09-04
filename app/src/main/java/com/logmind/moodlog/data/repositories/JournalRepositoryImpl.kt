@@ -1,17 +1,17 @@
 package com.logmind.moodlog.data.repositories
 
+import com.google.gson.Gson
 import com.logmind.moodlog.data.database.dao.JournalDao
 import com.logmind.moodlog.data.database.dao.TagDao
 import com.logmind.moodlog.data.mappers.toDomainModel
 import com.logmind.moodlog.data.mappers.toEntity
-import com.logmind.moodlog.domain.common.Result
 import com.logmind.moodlog.domain.entities.CreateJournalDto
 import com.logmind.moodlog.domain.entities.Journal
 import com.logmind.moodlog.domain.entities.UpdateJournalDto
 import com.logmind.moodlog.domain.repositories.JournalRepository
+import com.logmind.moodlog.utils.execute
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.transform
-import com.google.gson.Gson
 import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,7 +24,7 @@ class JournalRepositoryImpl @Inject constructor(
 
     private val gson = Gson()
 
-    override val journalStream: Flow<List<Journal>> = 
+    override val journalStream: Flow<List<Journal>> =
         journalDao.getAllJournalsFlow().transform { entities ->
             val journals = entities.map { entity ->
                 entity.toDomainModel(emptyList()) // Load tags separately if needed
@@ -32,75 +32,60 @@ class JournalRepositoryImpl @Inject constructor(
             emit(journals)
         }
 
-    override suspend fun getAllJournals(): Result<List<Journal>> {
-        return try {
+    override suspend fun getAllJournals(): List<Journal> {
+        return execute("getAllJournals") {
             val entities = journalDao.getAllJournals()
-            val journals = entities.map { entity ->
+            entities.map { entity ->
                 val tags = tagDao.getTagsByJournalId(entity.id).map { it.toDomainModel() }
                 entity.toDomainModel(tags)
             }
-            Result.success(journals)
-        } catch (e: Throwable) {
-            Result.error(e)
         }
     }
 
-    override suspend fun getJournalsByMonth(date: LocalDateTime): Result<List<Journal>> {
-        return try {
+    override suspend fun getJournalsByMonth(date: LocalDateTime): List<Journal> {
+        return execute("getJournalsByMonth") {
             val entities = journalDao.getJournalsByMonth(date)
-            val journals = entities.map { entity ->
+            entities.map { entity ->
                 val tags = tagDao.getTagsByJournalId(entity.id).map { it.toDomainModel() }
                 entity.toDomainModel(tags)
             }
-            Result.success(journals)
-        } catch (e: Throwable) {
-            Result.error(e)
         }
     }
 
-    override suspend fun getJournalsByDate(date: LocalDateTime): Result<List<Journal>> {
-        return try {
+    override suspend fun getJournalsByDate(date: LocalDateTime): List<Journal> {
+        return execute("getJournalsByDate") {
             val entities = journalDao.getJournalsByDate(date)
-            val journals = entities.map { entity ->
+            entities.map { entity ->
                 val tags = tagDao.getTagsByJournalId(entity.id).map { it.toDomainModel() }
                 entity.toDomainModel(tags)
             }
-            Result.success(journals)
-        } catch (e: Throwable) {
-            Result.error(e)
         }
     }
 
-    override suspend fun getJournalById(id: Int): Result<Journal> {
-        return try {
+    override suspend fun getJournalById(id: Int): Journal {
+        return execute("getJournalById") {
             val entity = journalDao.getJournalById(id)
                 ?: throw NoSuchElementException("Journal with id $id not found")
             val tags = tagDao.getTagsByJournalId(entity.id).map { it.toDomainModel() }
-            val journal = entity.toDomainModel(tags)
-            Result.success(journal)
-        } catch (e: Throwable) {
-            Result.error(e)
+            entity.toDomainModel(tags)
         }
     }
 
-    override suspend fun addJournal(dto: CreateJournalDto): Result<Map<String, Any>> {
-        return try {
+    override suspend fun addJournal(dto: CreateJournalDto): Map<String, Any> {
+        return execute("addJournal") {
             val entity = dto.toEntity()
             val journalId = journalDao.insertJournal(entity)
-            val result = mapOf("id" to journalId.toInt())
-            Result.success(result)
-        } catch (e: Throwable) {
-            Result.error(e)
+            mapOf("id" to journalId.toInt())
         }
     }
 
-    override suspend fun updateJournal(dto: UpdateJournalDto): Result<Int> {
-        return try {
+    override suspend fun updateJournal(dto: UpdateJournalDto): Int {
+        return execute("updateJournal") {
             val existingEntity = journalDao.getJournalById(dto.id)
                 ?: throw NoSuchElementException("Journal with id ${dto.id} not found")
-            
+
             val imageUrisJson = dto.imageUris?.takeIf { it.isNotEmpty() }?.let { gson.toJson(it) }
-            
+
             val updatedEntity = existingEntity.copy(
                 content = dto.content ?: existingEntity.content,
                 imageUris = imageUrisJson ?: existingEntity.imageUris,
@@ -109,33 +94,27 @@ class JournalRepositoryImpl @Inject constructor(
                 longitude = dto.longitude ?: existingEntity.longitude,
                 address = dto.address ?: existingEntity.address
             )
-            
-            val result = journalDao.updateJournal(updatedEntity)
-            Result.success(result)
-        } catch (e: Throwable) {
-            Result.error(e)
+
+            journalDao.updateJournal(updatedEntity)
         }
     }
 
-    override suspend fun getJournalsByDateRange(startDate: LocalDateTime, endDate: LocalDateTime): Result<List<Journal>> {
-        return try {
+    override suspend fun getJournalsByDateRange(
+        startDate: LocalDateTime,
+        endDate: LocalDateTime
+    ): List<Journal> {
+        return execute("getJournalsByDateRange") {
             val entities = journalDao.getJournalsByDateRange(startDate, endDate)
-            val journals = entities.map { entity ->
+            entities.map { entity ->
                 val tags = tagDao.getTagsByJournalId(entity.id).map { it.toDomainModel() }
                 entity.toDomainModel(tags)
             }
-            Result.success(journals)
-        } catch (e: Throwable) {
-            Result.error(e)
         }
     }
 
-    override suspend fun deleteJournalById(id: Int): Result<Unit> {
-        return try {
+    override suspend fun deleteJournalById(id: Int) {
+        return execute("deleteJournalById") {
             journalDao.deleteJournalById(id)
-            Result.success(Unit)
-        } catch (e: Throwable) {
-            Result.error(e)
         }
     }
 

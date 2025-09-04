@@ -1,6 +1,5 @@
 package com.logmind.moodlog.domain.repositories
 
-import com.logmind.moodlog.domain.common.Result
 import com.logmind.moodlog.domain.entities.CreateJournalDto
 import com.logmind.moodlog.domain.entities.Journal
 import com.logmind.moodlog.domain.entities.UpdateJournalDto
@@ -10,21 +9,24 @@ import java.time.LocalDateTime
 interface JournalRepository {
     val journalStream: Flow<List<Journal>>
 
-    suspend fun getAllJournals(): Result<List<Journal>>
+    suspend fun getAllJournals(): List<Journal>
 
-    suspend fun getJournalsByMonth(date: LocalDateTime): Result<List<Journal>>
+    suspend fun getJournalsByMonth(date: LocalDateTime): List<Journal>
 
-    suspend fun getJournalsByDate(date: LocalDateTime): Result<List<Journal>>
+    suspend fun getJournalsByDate(date: LocalDateTime): List<Journal>
 
-    suspend fun getJournalsByDateRange(startDate: LocalDateTime, endDate: LocalDateTime): Result<List<Journal>>
+    suspend fun getJournalsByDateRange(
+        startDate: LocalDateTime,
+        endDate: LocalDateTime
+    ): List<Journal>
 
-    suspend fun getJournalById(id: Int): Result<Journal>
+    suspend fun getJournalById(id: Int): Journal
 
-    suspend fun addJournal(dto: CreateJournalDto): Result<Map<String, Any>>
+    suspend fun addJournal(dto: CreateJournalDto): Map<String, Any>
 
-    suspend fun updateJournal(dto: UpdateJournalDto): Result<Int>
+    suspend fun updateJournal(dto: UpdateJournalDto): Int
 
-    suspend fun deleteJournalById(id: Int): Result<Unit>
+    suspend fun deleteJournalById(id: Int)
 
     fun clearCache()
 }

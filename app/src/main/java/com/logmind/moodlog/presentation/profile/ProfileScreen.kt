@@ -75,7 +75,7 @@ fun ProfileScreen(navController: NavHostController) {
             OutlinedButton(
                 onClick = {
                     authViewModel.signOut()
-                    navController.navigate(Screen.Auth.route) {
+                    navController.navigate(Screen.Auth) {
                         popUpTo(0) { inclusive = true }
                     }
                 },

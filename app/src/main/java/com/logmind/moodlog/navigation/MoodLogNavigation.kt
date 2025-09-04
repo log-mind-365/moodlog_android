@@ -39,7 +39,7 @@ fun MoodLogNavigation(
                     title = stringResource(R.string.app_name),
                     actions = {
                         MdlAvatar(onClick = {
-                            navController.navigate(Screen.Profile.route)
+                            navController.navigate(Screen.Home.route)
                         })
                     }
                 )
