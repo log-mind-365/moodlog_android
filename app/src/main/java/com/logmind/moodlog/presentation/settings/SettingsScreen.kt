@@ -1,6 +1,6 @@
 package com.logmind.moodlog.presentation.settings
 
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -18,39 +18,44 @@ import com.logmind.moodlog.presentation.settings.components.ThemeSection
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
+    modifier: Modifier,
+    topAppBar: @Composable () -> Unit,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        item {
-            SectionCard(
-                title = "기본 설정"
-            ) {
-                ThemeSection(
-                    currentTheme = uiState.themeMode,
-                    onThemeChange = viewModel::updateThemeMode
-                )
+    Column {
+        topAppBar()
+        LazyColumn(
+            modifier = modifier
+        ) {
+            item {
+                SectionCard(
+                    title = "기본 설정"
+                ) {
+                    ThemeSection(
+                        currentTheme = uiState.themeMode,
+                        onThemeChange = viewModel::updateThemeMode
+                    )
 
-                HorizontalDivider(
-                    color = MaterialTheme.colorScheme.surfaceVariant
-                )
+                    HorizontalDivider(
+                        color = MaterialTheme.colorScheme.surfaceVariant
+                    )
 
-                LanguageSection(
-                    currentLanguage = uiState.languageCode,
-                    onLanguageChange = viewModel::updateLanguage
-                )
+                    LanguageSection(
+                        currentLanguage = uiState.languageCode,
+                        onLanguageChange = viewModel::updateLanguage
+                    )
 
-                HorizontalDivider(
-                    color = MaterialTheme.colorScheme.surfaceVariant
-                )
+                    HorizontalDivider(
+                        color = MaterialTheme.colorScheme.surfaceVariant
+                    )
 
-                FontSection(
-                    currentFont = uiState.fontFamily,
-                    onFontChange = viewModel::updateFontFamily
-                )
+                    FontSection(
+                        currentFont = uiState.fontFamily,
+                        onFontChange = viewModel::updateFontFamily
+                    )
+                }
             }
         }
     }

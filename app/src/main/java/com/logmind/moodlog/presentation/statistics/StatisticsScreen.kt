@@ -34,76 +34,80 @@ import com.logmind.moodlog.presentation.statistics.components.charts.MoodTrendCh
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StatisticsScreen(
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
+    topAppBar: @Composable () -> Unit,
     viewModel: StatisticsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
 
-    Column(
-        modifier = modifier.fillMaxSize()
-    ) {
-        TimePeriodFilter(
-            selectedPeriod = uiState.selectedPeriod,
-            onPeriodSelected = viewModel::selectPeriod,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-        AnimatedVisibility(
-            visible = uiState.isLoading,
-            enter = fadeIn(),
-            exit = fadeOut()
+    Column {
+        topAppBar()
+        Column(
+            modifier = modifier
         ) {
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) { CircularProgressIndicator() }
-        }
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_lg)),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            item {
-                StatisticsCards(
-                    averageMood = uiState.averageMood,
-                    totalEntries = uiState.totalEntries,
-                    streakDays = uiState.streakDays,
-                    bestMoodDay = uiState.bestMoodDay
-                )
-            }
-            item {
-                MoodTrendChart(data = uiState.moodTrends)
-            }
-            item {
-                MoodDistributionChart(data = uiState.moodDistribution)
-            }
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-        }
-
-        // Error message
-        uiState.errorMessage?.let { error ->
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+            TimePeriodFilter(
+                selectedPeriod = uiState.selectedPeriod,
+                onPeriodSelected = viewModel::selectPeriod,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+            AnimatedVisibility(
+                visible = uiState.isLoading,
+                enter = fadeIn(),
+                exit = fadeOut()
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) { CircularProgressIndicator() }
+            }
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_lg)),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                item {
+                    StatisticsCards(
+                        averageMood = uiState.averageMood,
+                        totalEntries = uiState.totalEntries,
+                        streakDays = uiState.streakDays,
+                        bestMoodDay = uiState.bestMoodDay
+                    )
+                }
+                item {
+                    MoodTrendChart(data = uiState.moodTrends)
+                }
+                item {
+                    MoodDistributionChart(data = uiState.moodDistribution)
+                }
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+            }
+
+            // Error message
+            uiState.errorMessage?.let { error ->
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "데이터를 불러올 수 없습니다",
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                    Text(
-                        text = error,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Button(
-                        onClick = { viewModel.refreshStatistics() }
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Text("다시 시도")
+                        Text(
+                            text = "데이터를 불러올 수 없습니다",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Text(
+                            text = error,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Button(
+                            onClick = { viewModel.refreshStatistics() }
+                        ) {
+                            Text("다시 시도")
+                        }
                     }
                 }
             }

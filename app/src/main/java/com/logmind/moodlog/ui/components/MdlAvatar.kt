@@ -32,7 +32,7 @@ fun MdlAvatar(
         modifier = modifier
             .size(size)
             .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.primary, CircleShape)
+            .background(MaterialTheme.colorScheme.primaryContainer, CircleShape)
             .then(
                 if (onClick != null) {
                     Modifier.clickable { onClick() }

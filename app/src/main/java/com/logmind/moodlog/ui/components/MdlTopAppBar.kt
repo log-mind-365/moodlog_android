@@ -10,23 +10,24 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.logmind.moodlog.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MdlTopAppBar(
-    title: String = "",
+    title: Int,
     actions: @Composable () -> Unit = {},
     navigationIcon: @Composable () -> Unit = {}
 ) {
     TopAppBar(
         title = {
             Text(
-                title,
+                stringResource(title),
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primaryContainer
                 )
             )
         },

@@ -30,7 +30,7 @@ fun ModernDateHeader(
 ) {
 
     MdlCard(
-        containerColor = MaterialTheme.colorScheme.primary,
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
         contentColor = MaterialTheme.colorScheme.onSecondary,
     ) {
         Column(

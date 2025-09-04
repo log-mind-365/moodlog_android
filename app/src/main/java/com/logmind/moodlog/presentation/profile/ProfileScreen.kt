@@ -27,13 +27,13 @@ import com.logmind.moodlog.navigation.Screen
 import com.logmind.moodlog.presentation.auth.AuthViewModel
 
 @Composable
-fun ProfileScreen(navController: NavHostController) {
+fun ProfileScreen(modifier: Modifier, navController: NavHostController) {
     val authViewModel: AuthViewModel = hiltViewModel()
     val authState by authViewModel.uiState.collectAsStateWithLifecycle()
     val user = authState.user
 
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier
     ) {
         if (user != null) {
             // 사용자 정보 표시

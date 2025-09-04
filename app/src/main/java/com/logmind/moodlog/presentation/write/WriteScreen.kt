@@ -3,10 +3,10 @@ package com.logmind.moodlog.presentation.write
 import android.net.Uri
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -39,12 +39,15 @@ import com.logmind.moodlog.domain.entities.MoodType
 import com.logmind.moodlog.domain.entities.Tag
 import com.logmind.moodlog.presentation.write.components.ImagePicker
 import com.logmind.moodlog.presentation.write.components.TagPicker
+import com.logmind.moodlog.presentation.write.components.WriteScreenTopAppBar
 import com.logmind.moodlog.ui.components.MdlCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WriteScreen(
+    modifier: Modifier,
     redirectHome: () -> Unit,
+    onNavigateBack: () -> Unit,
     onImagePick: () -> Unit = {},
     onCameraTake: () -> Unit = {},
     viewModel: WriteViewModel = hiltViewModel()
@@ -53,7 +56,7 @@ fun WriteScreen(
 
     if (uiState.isLoading) {
         Box(
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier,
             contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator()
@@ -75,32 +78,37 @@ fun WriteScreen(
 
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_xxl))
+        modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainer)
     ) {
-        MoodSlider(
-            selectedMood = uiState.selectedMood,
-            onMoodChange = viewModel::updateMood
+        WriteScreenTopAppBar(
+            onNavigateBack = onNavigateBack,
+            saveJournal = { viewModel.saveJournal() },
+            canSave = uiState.canSave
         )
-
-        ContentInput(
-            content = uiState.content,
-            onContentChange = viewModel::updateContent
-        )
-
-        ModernImageSection(
-            images = uiState.imageUris,
-            onImagesChanged = viewModel::updateImages
-        )
-
-        ModernTagSection(
-            availableTags = uiState.availableTags,
-            selectedTags = uiState.selectedTags,
-            onTagToggle = viewModel::toggleTag,
-            onNewTagCreate = viewModel::createNewTag
-        )
+        Column(
+            modifier = modifier
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_xxl))
+        ) {
+            MoodSlider(
+                selectedMood = uiState.selectedMood,
+                onMoodChange = viewModel::updateMood
+            )
+            ContentInput(
+                content = uiState.content,
+                onContentChange = viewModel::updateContent
+            )
+            ModernImageSection(
+                images = uiState.imageUris,
+                onImagesChanged = viewModel::updateImages
+            )
+            ModernTagSection(
+                availableTags = uiState.availableTags,
+                selectedTags = uiState.selectedTags,
+                onTagToggle = viewModel::toggleTag,
+                onNewTagCreate = viewModel::createNewTag
+            )
+        }
     }
 }
 

@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -33,62 +32,68 @@ import com.logmind.moodlog.ui.components.MdlCard
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    modifier: Modifier,
+    topAppBar: @Composable () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val selectedDate by viewModel.selectedDate.collectAsStateWithLifecycle()
 
 
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        ModernDateHeader(
-            selectedDate = selectedDate,
-            monthlyJournals = uiState.monthlyJournals,
-            onDateSelected = viewModel::selectDate
-        )
-        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.spacing_lg)))
-      
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+
+    Column {
+        topAppBar()
+        Column(
+            modifier = modifier
         ) {
-            Text(
-                text = "오늘의 기록",
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight.SemiBold
-                )
+            ModernDateHeader(
+                selectedDate = selectedDate,
+                monthlyJournals = uiState.monthlyJournals,
+                onDateSelected = viewModel::selectDate
             )
-        }
-        Spacer(modifier = Modifier.height(12.dp))
-        if (uiState.isLoading) {
-            Box(
+            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.spacing_lg)))
+
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) { CircularProgressIndicator() }
-        } else {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxWidth()
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                items(uiState.selectedDateJournals) { journal ->
-                    JournalCard(
-                        journal = journal,
-                        onDelete = { viewModel.deleteJournal(journal.id) }
+                Text(
+                    text = "오늘의 기록",
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.SemiBold
                     )
-                }
-                if (uiState.selectedDateJournals.isEmpty()) {
-                    item {
-                        MdlCard {
-                            Text(
-                                text = "아직 기록이 없어요\n첫 번째 무드를 기록해보세요!",
-                                style = MaterialTheme.typography.bodyMedium,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(32.dp)
-                            )
+                )
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+            if (uiState.isLoading) {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) { CircularProgressIndicator() }
+            } else {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    items(uiState.selectedDateJournals) { journal ->
+                        JournalCard(
+                            journal = journal,
+                            onDelete = { viewModel.deleteJournal(journal.id) }
+                        )
+                    }
+                    if (uiState.selectedDateJournals.isEmpty()) {
+                        item {
+                            MdlCard {
+                                Text(
+                                    text = "아직 기록이 없어요\n첫 번째 무드를 기록해보세요!",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(32.dp)
+                                )
+                            }
                         }
                     }
                 }
