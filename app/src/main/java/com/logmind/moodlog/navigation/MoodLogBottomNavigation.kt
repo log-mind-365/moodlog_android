@@ -23,10 +23,11 @@ fun MoodLogBottomNavigation(
     NavigationBar {
         bottomNavigationItems.forEach { item ->
             val selected = currentScreen.route == item.route
-
             NavigationBarItem(
                 colors = NavigationBarItemDefaults.colors(
                     indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+                    selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 ),
                 icon = {
                     val icon = if (selected) item.selectedIcon else item.unselectedIcon
@@ -42,9 +43,6 @@ fun MoodLogBottomNavigation(
                 onClick = {
                     if (currentScreen.route != item.route) {
                         navigate(item.route) {
-                            popUpTo(Screen.Home.route) {
-                                saveState = true
-                            }
                             launchSingleTop = true
                             restoreState = true
                         }

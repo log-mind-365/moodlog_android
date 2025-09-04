@@ -43,8 +43,8 @@ fun MdlCard(
 fun MdlCard(
     modifier: Modifier = Modifier,
     shape: Shape = MaterialTheme.shapes.large,
-    containerColor: Color = MaterialTheme.colorScheme.background,
-    contentColor: Color = MaterialTheme.colorScheme.onBackground,
+    containerColor: Color = MaterialTheme.colorScheme.surface,
+    contentColor: Color = MaterialTheme.colorScheme.onSurface,
     elevation: CardElevation = CardDefaults.cardElevation(),
     border: BorderStroke? = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceContainerHigh),
     content: @Composable () -> Unit
